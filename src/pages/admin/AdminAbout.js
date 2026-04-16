@@ -20,8 +20,11 @@ import {
   message,
 } from "antd";
 import AdminPageHeader from "./components/AdminPageHeader";
+import AdminImageUpload from "./components/AdminImageUpload";
 import RichTextField from "./components/RichTextField";
 import adminApi from "./adminApi";
+import { buildMultipartFormData } from "./multipartForm";
+import { resolveAssetUrl } from "../../utils/assetUrl";
 
 function AdminAbout() {
   const [form] = Form.useForm();
@@ -59,8 +62,17 @@ function AdminAbout() {
   const handleSubmit = async (values) => {
     setSaving(true);
     try {
-      await adminApi.put("/admin/about", values);
+      const formData = buildMultipartFormData(values, {
+        fileFields: {
+          aboutImageUrl: "aboutImage",
+          aboutImageLgUrl: "aboutImageLg",
+        },
+      });
+      await adminApi.put("/admin/about", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
       apiMessage.success("About content updated successfully.");
+      loadData();
     } catch (error) {
       apiMessage.error(
         error.response?.data?.message || "Unable to update about content."
@@ -108,10 +120,19 @@ function AdminAbout() {
 
   const handleServiceSubmit = async (values) => {
     try {
+      const formData = buildMultipartFormData(values, {
+        fileFields: {
+          imageUrl: "image",
+        },
+      });
       if (serviceModal.record?.id) {
-        await adminApi.put(`/admin/about/services/${serviceModal.record.id}`, values);
+        await adminApi.put(`/admin/about/services/${serviceModal.record.id}`, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
       } else {
-        await adminApi.post("/admin/about/services", values);
+        await adminApi.post("/admin/about/services", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
       }
       apiMessage.success("Service saved successfully.");
       closeServiceModal();
@@ -186,21 +207,21 @@ function AdminAbout() {
                     </Form.Item>
 
                     <Form.Item
-                      label="About Image URL"
+                      label="About Image"
                       name="aboutImageUrl"
-                      rules={[{ required: true, message: "About image URL is required." }]}
+                      rules={[{ required: true, message: "About image is required." }]}
                     >
-                      <Input placeholder="https://example.com/about.jpg" />
+                      <AdminImageUpload label="Upload about image" />
                     </Form.Item>
 
                     <Form.Item
-                      label="About Large Image URL"
+                      label="About Large Image"
                       name="aboutImageLgUrl"
                       rules={[
-                        { required: true, message: "Large image URL is required." },
+                        { required: true, message: "Large image is required." },
                       ]}
                     >
-                      <Input placeholder="https://example.com/about-large.jpg" />
+                      <AdminImageUpload label="Upload large image" />
                     </Form.Item>
                   </div>
 
@@ -343,7 +364,7 @@ function AdminAbout() {
               name="imageUrl"
               rules={[{ required: true, message: "Image URL is required." }]}
             >
-              <Input />
+              <AdminImageUpload label="Upload service image" />
             </Form.Item>
             <Form.Item
               label="Title"
@@ -420,7 +441,9 @@ function AdminAbout() {
       <Modal open={Boolean(preview)} footer={null} onCancel={() => setPreview(null)} width={760} title={preview?.type === "service" ? preview?.record?.title : preview?.record?.reviewerName}>
         {preview?.type === "service" ? (
           <div className="admin-preview">
-            <p><strong>Image URL:</strong> {preview.record.imageUrl}</p>
+            <div className="admin-preview__image">
+              <img src={resolveAssetUrl(preview.record.imageUrl)} alt={preview.record.title} />
+            </div>
             <div
               className="admin-preview__content"
               dangerouslySetInnerHTML={{ __html: preview.record.description || "" }}

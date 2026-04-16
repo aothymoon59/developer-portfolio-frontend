@@ -1,9 +1,11 @@
 import axios from "axios";
 import { clearAdminAuth, getAdminToken } from "./adminAuth";
+import { API_BASE_URL, resolveAssetUrl } from "../../utils/assetUrl";
+
+export const ADMIN_API_BASE_URL = API_BASE_URL;
 
 const adminApi = axios.create({
-  baseURL:
-    process.env.REACT_APP_API_BASE_URL || "http://localhost:5000/api/v1",
+  baseURL: ADMIN_API_BASE_URL,
 });
 
 adminApi.interceptors.request.use((config) => {

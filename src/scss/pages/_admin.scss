@@ -266,6 +266,34 @@
   margin-bottom: 12px;
 }
 
+.admin-image-upload {
+  display: grid;
+  gap: 12px;
+}
+
+.admin-image-upload__preview {
+  max-width: 220px;
+}
+
+.admin-image-upload__preview img,
+.admin-preview__image img {
+  width: 100%;
+  border-radius: 16px;
+  object-fit: cover;
+}
+
+.admin-upload-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px dashed #91b4e8;
+  border-radius: 14px;
+  background: #f7fbff;
+  color: #0d2347;
+}
+
 .admin-richtext .ql-toolbar.ql-snow,
 .admin-richtext .ql-container.ql-snow {
   border-color: #d8e4f4;
@@ -284,6 +312,11 @@
 .admin-preview__content,
 .admin-preview__content p {
   color: #1a2740;
+}
+
+.admin-preview__image {
+  max-width: 260px;
+  margin-bottom: 16px;
 }
 
 .admin-cell-clamp {

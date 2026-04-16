@@ -21,8 +21,11 @@ import {
   message,
 } from "antd";
 import AdminPageHeader from "./components/AdminPageHeader";
+import AdminImageUpload from "./components/AdminImageUpload";
 import RichTextField from "./components/RichTextField";
 import adminApi from "./adminApi";
+import { buildMultipartFormData } from "./multipartForm";
+import { resolveAssetUrl } from "../../utils/assetUrl";
 
 function AdminProjects() {
   const [form] = Form.useForm();
@@ -101,10 +104,20 @@ function AdminProjects() {
   const handleSubmit = async (values) => {
     setSubmitting(true);
     try {
+      const formData = buildMultipartFormData(values, {
+        fileFields: {
+          imageUrl: "image",
+        },
+        jsonFields: ["technology", "skills", "additionalLinks"],
+      });
       if (modalState.record?.id) {
-        await adminApi.put(`/admin/projects/${modalState.record.id}`, values);
+        await adminApi.put(`/admin/projects/${modalState.record.id}`, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
       } else {
-        await adminApi.post("/admin/projects", values);
+        await adminApi.post("/admin/projects", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
       }
       apiMessage.success("Project saved successfully.");
       closeModal();
@@ -207,11 +220,11 @@ function AdminProjects() {
               <Input />
             </Form.Item>
             <Form.Item
-              label="Image URL"
+              label="Project Image"
               name="imageUrl"
-              rules={[{ required: true, message: "Image URL is required." }]}
+              rules={[{ required: true, message: "Project image is required." }]}
             >
-              <Input />
+              <AdminImageUpload label="Upload project image" />
             </Form.Item>
             <Form.Item
               label="Live URL"
@@ -319,7 +332,10 @@ function AdminProjects() {
         width={860}
       >
         {viewRecord ? (
-          <div className="admin-preview">
+            <div className="admin-preview">
+            <div className="admin-preview__image">
+              <img src={resolveAssetUrl(viewRecord.imageUrl)} alt={viewRecord.title} />
+            </div>
             <p><strong>Subtitle:</strong> {viewRecord.subTitle}</p>
             <p><strong>Live URL:</strong> {viewRecord.liveUrl || "-"}</p>
             <p><strong>Frontend Github:</strong> {viewRecord.frontendRepoUrl || "-"}</p>

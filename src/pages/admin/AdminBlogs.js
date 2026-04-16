@@ -22,8 +22,11 @@ import {
 } from "antd";
 import dayjs from "dayjs";
 import AdminPageHeader from "./components/AdminPageHeader";
+import AdminImageUpload from "./components/AdminImageUpload";
 import RichTextField from "./components/RichTextField";
 import adminApi from "./adminApi";
+import { buildMultipartFormData } from "./multipartForm";
+import { resolveAssetUrl } from "../../utils/assetUrl";
 
 function AdminBlogs() {
   const [form] = Form.useForm();
@@ -107,10 +110,20 @@ function AdminBlogs() {
 
     setSubmitting(true);
     try {
+      const formData = buildMultipartFormData(payload, {
+        fileFields: {
+          coverImage: "coverImageFile",
+        },
+        jsonFields: ["tags"],
+      });
       if (modalState.record?.id) {
-        await adminApi.put(`/admin/blogs/${modalState.record.id}`, payload);
+        await adminApi.put(`/admin/blogs/${modalState.record.id}`, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
       } else {
-        await adminApi.post("/admin/blogs", payload);
+        await adminApi.post("/admin/blogs", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
       }
       apiMessage.success("Blog saved successfully.");
       closeModal();
@@ -214,11 +227,11 @@ function AdminBlogs() {
               <Input />
             </Form.Item>
             <Form.Item
-              label="Cover Image URL"
+              label="Cover Image"
               name="coverImage"
               rules={[{ required: true, message: "Cover image is required." }]}
             >
-              <Input />
+              <AdminImageUpload label="Upload cover image" />
             </Form.Item>
             <Form.Item
               label="Tags"
@@ -267,6 +280,9 @@ function AdminBlogs() {
       >
         {viewRecord ? (
           <div className="admin-preview">
+            <div className="admin-preview__image">
+              <img src={resolveAssetUrl(viewRecord.coverImage)} alt={viewRecord.title} />
+            </div>
             <p><strong>Subtitle:</strong> {viewRecord.subTitle}</p>
             <div
               className="admin-preview__content"

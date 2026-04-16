@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Button, Card, Form, Input, message } from "antd";
 import AdminPageHeader from "./components/AdminPageHeader";
+import AdminImageUpload from "./components/AdminImageUpload";
 import RichTextField from "./components/RichTextField";
 import adminApi from "./adminApi";
+import { buildMultipartFormData } from "./multipartForm";
 
 function AdminSettings() {
   const [form] = Form.useForm();
@@ -36,7 +38,7 @@ function AdminSettings() {
     setIsSubmitting(true);
 
     try {
-      await adminApi.put("/admin/settings", {
+      const normalizedValues = {
         ...values,
         phoneNumbers: String(values.phoneNumbers || "")
           .split(",")
@@ -46,6 +48,15 @@ function AdminSettings() {
           .split(",")
           .map((item) => item.trim())
           .filter(Boolean),
+      };
+      const formData = buildMultipartFormData(normalizedValues, {
+        fileFields: {
+          logoUrl: "logo",
+        },
+        jsonFields: ["phoneNumbers", "emailAddresses"],
+      });
+      await adminApi.put("/admin/settings", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
       apiMessage.success("Site settings updated successfully.");
     } catch (requestError) {
@@ -83,11 +94,11 @@ function AdminSettings() {
               <Input />
             </Form.Item>
             <Form.Item
-              label="Logo URL"
+              label="Logo"
               name="logoUrl"
-              rules={[{ required: true, message: "Logo URL is required." }]}
+              rules={[{ required: true, message: "Logo is required." }]}
             >
-              <Input />
+              <AdminImageUpload label="Upload logo" />
             </Form.Item>
             <Form.Item
               label="Primary Email"
