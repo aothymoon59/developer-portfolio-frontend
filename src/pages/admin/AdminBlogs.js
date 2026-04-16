@@ -27,6 +27,7 @@ import RichTextField from "./components/RichTextField";
 import adminApi from "./adminApi";
 import { buildMultipartFormData } from "./multipartForm";
 import { resolveAssetUrl } from "../../utils/assetUrl";
+import { slugify } from "../../utils/slug";
 
 function AdminBlogs() {
   const [form] = Form.useForm();
@@ -90,6 +91,14 @@ function AdminBlogs() {
   const closeModal = () => {
     setModalState({ open: false, record: null });
     form.resetFields();
+  };
+
+  const handleTitleChange = (event) => {
+    const nextTitle = event.target.value;
+    form.setFieldsValue({
+      title: nextTitle,
+      slug: slugify(nextTitle),
+    });
   };
 
   const handleDelete = async (id) => {
@@ -210,14 +219,14 @@ function AdminBlogs() {
               name="title"
               rules={[{ required: true, message: "Title is required." }]}
             >
-              <Input />
+              <Input onChange={handleTitleChange} />
             </Form.Item>
             <Form.Item
               label="Slug"
               name="slug"
               rules={[{ required: true, message: "Slug is required." }]}
             >
-              <Input />
+              <Input readOnly />
             </Form.Item>
             <Form.Item
               label="Subtitle"
@@ -238,7 +247,16 @@ function AdminBlogs() {
               name="tags"
               rules={[{ required: true, message: "Tags are required." }]}
             >
-              <Select mode="tags" placeholder="Add tags" />
+              <Select
+                mode="tags"
+                style={{ width: "100%" }}
+                tokenSeparators={[","]}
+                options={(form.getFieldValue("tags") || []).map((item) => ({
+                  value: item,
+                  label: item,
+                }))}
+                placeholder="Add tags"
+              />
             </Form.Item>
             <Form.Item label="Published At" name="publishedAt">
               <DatePicker showTime style={{ width: "100%" }} />

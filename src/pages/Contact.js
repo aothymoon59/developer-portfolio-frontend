@@ -5,6 +5,7 @@ import { Helmet } from "react-helmet";
 import Layout from "../components/Layout";
 import Sectiontitle from "../components/Sectiontitle";
 import Spinner from "../components/Spinner";
+import { API_BASE_URL } from "../utils/assetUrl";
 
 function Contact() {
   const [phoneNumbers, setPhoneNumbers] = useState([]);
@@ -18,8 +19,9 @@ function Contact() {
   });
   const [error, setError] = useState(false);
   const [message, setMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const submitHandler = (event) => {
+  const submitHandler = async (event) => {
     event.preventDefault();
     if (!formdata.name) {
       setError(true);
@@ -34,8 +36,26 @@ function Contact() {
       setError(true);
       setMessage("Message is required");
     } else {
-      setError(false);
-      setMessage("You message has been sent!!!");
+      try {
+        setIsSubmitting(true);
+        const response = await axios.post(`${API_BASE_URL}/messages`, formdata);
+        setError(false);
+        setMessage(response.data.message || "Your message has been sent.");
+        setFormdata({
+          name: "",
+          email: "",
+          subject: "",
+          message: "",
+        });
+      } catch (requestError) {
+        setError(true);
+        setMessage(
+          requestError.response?.data?.message ||
+            "Unable to send your message right now."
+        );
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
   const handleChange = (event) => {
@@ -139,8 +159,8 @@ function Contact() {
                       ></textarea>
                     </div>
                     <div className="mi-form-field">
-                      <button className="mi-button" type="submit">
-                        Send Mail
+                      <button className="mi-button" type="submit" disabled={isSubmitting}>
+                        {isSubmitting ? "Sending..." : "Send Mail"}
                       </button>
                     </div>
                   </form>

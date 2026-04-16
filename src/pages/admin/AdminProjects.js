@@ -26,6 +26,7 @@ import RichTextField from "./components/RichTextField";
 import adminApi from "./adminApi";
 import { buildMultipartFormData } from "./multipartForm";
 import { resolveAssetUrl } from "../../utils/assetUrl";
+import { slugify } from "../../utils/slug";
 
 function AdminProjects() {
   const [form] = Form.useForm();
@@ -89,6 +90,14 @@ function AdminProjects() {
   const closeModal = () => {
     setModalState({ open: false, record: null });
     form.resetFields();
+  };
+
+  const handleTitleChange = (event) => {
+    const nextTitle = event.target.value;
+    form.setFieldsValue({
+      title: nextTitle,
+      slug: slugify(nextTitle),
+    });
   };
 
   const handleDelete = async (id) => {
@@ -200,14 +209,14 @@ function AdminProjects() {
               name="title"
               rules={[{ required: true, message: "Title is required." }]}
             >
-              <Input />
+              <Input onChange={handleTitleChange} />
             </Form.Item>
             <Form.Item
               label="Slug"
               name="slug"
               rules={[{ required: true, message: "Slug is required." }]}
             >
-              <Input />
+              <Input readOnly />
             </Form.Item>
             <Form.Item
               label="Subtitle"
@@ -263,7 +272,16 @@ function AdminProjects() {
               name="skills"
               rules={[{ required: true, message: "Skills are required." }]}
             >
-              <Select mode="tags" placeholder="Select or add skills" />
+              <Select
+                mode="tags"
+                style={{ width: "100%" }}
+                tokenSeparators={[","]}
+                options={(form.getFieldValue("skills") || []).map((item) => ({
+                  value: item,
+                  label: item,
+                }))}
+                placeholder="Select or add skills"
+              />
             </Form.Item>
             <Form.Item label="Sort Order" name="sortOrder">
               <InputNumber min={0} style={{ width: "100%" }} />
