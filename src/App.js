@@ -52,7 +52,9 @@ function PublicRouteFrame({ lightMode, onToggleMode }) {
           <Icon.Sun />
         </span>
         <button
-          className={lightMode ? "light-mode-switch active" : "light-mode-switch"}
+          className={
+            lightMode ? "light-mode-switch active" : "light-mode-switch"
+          }
           onClick={onToggleMode}
         ></button>
       </div>
@@ -102,7 +104,7 @@ function App() {
         },
         {
           path: "portfolios",
-          element: <Portfolios />,
+          element: <Portfolios lightMode={lightMode} />,
         },
         {
           path: "blogs",
