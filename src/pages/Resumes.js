@@ -8,6 +8,7 @@ import Resume from "../components/Resume";
 import Sectiontitle from "../components/Sectiontitle";
 import Smalltitle from "../components/Smalltitle";
 import Spinner from "../components/Spinner";
+import api from "../utils/api";
 
 function Resumes() {
   const [skills, setSkills] = useState([]);
@@ -15,14 +16,20 @@ function Resumes() {
   const [educationExperience, setEducationExperience] = useState([]);
 
   useEffect(() => {
-    axios.get("/api/skills").then((response) => {
-      setSkills(response.data);
+    api.get("/portfolio/skills").then((response) => {
+      setSkills(response?.data?.data || []);
     });
-    axios.get("/api/experience").then((response) => {
-      setWorkingExperience(response.data.workingExperience);
-      setEducationExperience(response.data.educationExperience);
+    api.get("/portfolio/experiences").then((response) => {
+      setWorkingExperience(response?.data?.data || []);
+    });
+    api.get("/portfolio/education").then((response) => {
+      setEducationExperience(response?.data?.data || []);
     });
   }, []);
+
+  console.log("skills", skills);
+  console.log("workingExperience", workingExperience);
+  console.log("educationExperience", educationExperience);
 
   return (
     <Layout>
@@ -39,13 +46,13 @@ function Resumes() {
             <Sectiontitle title="My Skills" />
             <div className="mi-skills">
               <div className="row mt-30-reverse">
-                {skills.map((skill) => (
+                {skills?.map((skill) => (
                   <TrackVisibility
                     once
                     className="col-lg-6 mt-30"
-                    key={skill.title}
+                    key={skill.id}
                   >
-                    <Progress title={skill.title} percentage={skill.value} />
+                    <Progress title={skill.name} percentage={skill.level} />
                   </TrackVisibility>
                 ))}
               </div>

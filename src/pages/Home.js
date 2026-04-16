@@ -1,19 +1,13 @@
-import axios from "axios";
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense } from "react";
 import { Helmet } from "react-helmet";
 import Layout from "../components/Layout";
 import Particle from "../components/Particle";
 import Socialicons from "../components/Socialicons";
 import Spinner from "../components/Spinner";
+import useSiteSettings from "../hooks/useSiteSettings";
 
 function Home({ lightMode }) {
-  const [information, setInformation] = useState("");
-
-  useEffect(() => {
-    axios.get("/api/information").then((response) => {
-      setInformation(response.data);
-    });
-  }, []);
+  const { siteSettings, loading, error } = useSiteSettings();
 
   return (
     <Layout>
@@ -32,10 +26,17 @@ function Home({ lightMode }) {
               <div className="col-lg-10 col-12">
                 <div className="mi-home-content">
                   <h1>
-                    Hi, I am{" "}
-                    <span className="color-theme">{information.name}</span>
+                    {siteSettings.heroTitle || "Hi, I am"}{" "}
+                    <span className="color-theme">{siteSettings.fullName}</span>
                   </h1>
-                  <p>{information.aboutContent}</p>
+                  <h2>{siteSettings.jobTitle}</h2>
+                  {siteSettings.homeDescription && (
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: siteSettings.homeDescription,
+                      }}
+                    />
+                  )}
                   <Socialicons bordered />
                 </div>
               </div>
