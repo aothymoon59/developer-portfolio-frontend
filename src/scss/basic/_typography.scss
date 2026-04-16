@@ -28,12 +28,16 @@
 }
 
 html {
-	overflow: hidden;
+	overflow-x: hidden;
 	overflow-y: auto;
+	height: auto;
 }
 
 body {
-	overflow: hidden !important;
+	overflow-x: hidden !important;
+	overflow-y: auto !important;
+	height: auto;
+	min-height: 100vh;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	font-size: $fz-body;
