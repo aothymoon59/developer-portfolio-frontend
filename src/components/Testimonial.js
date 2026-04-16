@@ -1,21 +1,17 @@
-import React from 'react'
+import React from "react";
 
-function Testimonial(props){
+function Testimonial(props) {
   const reviewText = props.content.review || props.content.content;
   const reviewerName = props.content.reviewerName || props.content.author?.name;
   const reviewerTitle =
-    props.content.reviewerTitle ||
-    props.content.author?.designation ||
-    "";
+    props.content.reviewerTitle || props.content.author?.designation || "";
   const officeName = props.content.officeName || "";
 
   return (
     <div className="mi-testimonial-slideritem">
       <div className="mi-testimonial">
         <div className="mi-testimonial-content">
-          <p>
-            {reviewText}
-          </p>
+          <p dangerouslySetInnerHTML={{ __html: reviewText }} />
         </div>
         <div className="mi-testimonial-author">
           <h5>{reviewerName}</h5>
@@ -23,7 +19,7 @@ function Testimonial(props){
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export default Testimonial;

@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 import LineIcon from "react-lineicons";
 import { Image } from "./common/Image";
 
-function Service(props){
+function Service(props) {
   return (
     <div className="mi-service">
       {props.content.imageUrl ? (
@@ -19,9 +19,9 @@ function Service(props){
         </span>
       )}
       <h5>{props.content.title}</h5>
-      <p>{props.content.description || props.content.details}</p>
+      <div dangerouslySetInnerHTML={{ __html: props.content.description }} />
     </div>
-  )
+  );
 }
 
 export default Service;

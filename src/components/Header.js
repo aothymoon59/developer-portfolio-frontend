@@ -1,11 +1,11 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import LineIcon from "react-lineicons";
 import { Link, NavLink } from "react-router-dom";
 import { Image } from "./common/Image";
+import api from "../utils/api";
 
 function Header() {
-  const [information, setInformation] = useState("");
+  const [information, setInformation] = useState({});
   const [navigationToggler, setNavigationToggler] = useState(false);
 
   const handleNavigationToggler = () => {
@@ -13,8 +13,12 @@ function Header() {
   };
 
   useEffect(() => {
-    axios.get("/api/information").then((response) => {
-      setInformation(response.data);
+    api.get("/portfolio/site-settings").then((response) => {
+      const data = response.data.data;
+      setInformation({
+        brandImage: data.logoUrl,
+        name: data.fullName,
+      });
     });
   }, []);
 

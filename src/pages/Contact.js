@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { Suspense, useEffect, useState } from "react";
 import * as Icon from "react-feather";
 import { Helmet } from "react-helmet";
@@ -6,7 +5,8 @@ import { message } from "antd";
 import Layout from "../components/Layout";
 import Sectiontitle from "../components/Sectiontitle";
 import Spinner from "../components/Spinner";
-import { API_BASE_URL } from "../utils/assetUrl";
+import api from "../utils/api";
+import axios from "axios";
 
 function Contact() {
   const [phoneNumbers, setPhoneNumbers] = useState([]);
@@ -33,7 +33,7 @@ function Contact() {
     } else {
       try {
         setIsSubmitting(true);
-        const response = await axios.post(`${API_BASE_URL}/messages`, formdata);
+        const response = await api.post("/messages", formdata);
         message.success(response.data.message || "Your message has been sent.");
         setFormdata({
           name: "",

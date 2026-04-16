@@ -1,4 +1,3 @@
-import axios from "axios";
 import FsLightbox from "fslightbox-react";
 import React, { Suspense, useEffect, useState } from "react";
 import * as Icon from "react-feather";
@@ -10,10 +9,11 @@ import Service from "../components/Service";
 import Spinner from "../components/Spinner";
 import Testimonial from "../components/Testimonial";
 import { Image } from "../components/common/Image";
+import api from "../utils/api";
 
 function About() {
   const [toggler, setToggler] = useState(false);
-  const [information, setInformation] = useState("");
+  const [information, setInformation] = useState({});
   const [services, setServices] = useState([]);
   const [reviews, setReviews] = useState([]);
 
@@ -44,16 +44,18 @@ function About() {
   };
 
   useEffect(() => {
-    axios.get("/api/information").then((response) => {
-      setInformation(response.data);
+    api.get("/portfolio/site-settings").then((response) => {
+      setInformation(response.data.data);
     });
-    axios.get("/api/services").then((response) => {
-      setServices(response.data);
+    api.get("/portfolio/services").then((response) => {
+      setServices(response.data.data);
     });
-    axios.get("/api/reviews").then((response) => {
-      setReviews(response.data);
+    api.get("/portfolio/reviews").then((response) => {
+      setReviews(response.data.data);
     });
   }, []);
+
+  console.log("information", information);
 
   return (
     <Layout>
@@ -72,7 +74,7 @@ function About() {
               <div className="col-lg-6">
                 <div className="mi-about-image">
                   <Image
-                    src={information.aboutImage}
+                    src={information.aboutImageUrl}
                     loader="/images/about-image-placeholder.png"
                     alt="aboutimage"
                     onClick={() => handleToggler(!toggler)}
@@ -82,27 +84,32 @@ function About() {
                   </span>
                   <FsLightbox
                     toggler={toggler}
-                    sources={[information.aboutImageLg]}
+                    sources={[information.aboutImageLgUrl]}
                   />
                 </div>
               </div>
               <div className="col-lg-6">
                 <div className="mi-about-content">
                   <h3>
-                    I am <span className="color-theme">{information.name}</span>
+                    I am{" "}
+                    <span className="color-theme">{information.fullName}</span>
                   </h3>
-                  <p>
-                    Senior PHP-Laravel Developer with 5+ years building scalable ERP, POS, RMS & AI-powered systems. Expert in Laravel, APIs, MySQL & React.js. Delivered 100+ projects with strong focus on performance, security & automation.
-                  </p>
+                  {information.aboutDescription && (
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: information.aboutDescription,
+                      }}
+                    />
+                  )}
                   <ul>
-                    {!information.name ? null : (
+                    {!information.fullName ? null : (
                       <li>
-                        <b>Full Name</b> {information.name}
+                        <b>Full Name</b> {information.fullName}
                       </li>
                     )}
-                    {!information.age ? null : (
+                    {!information.jobTitle ? null : (
                       <li>
-                        <b>Age</b> {information.age} Years
+                        <b>Job Title</b> {information.jobTitle}
                       </li>
                     )}
                     {!information.phone ? null : (
@@ -110,21 +117,17 @@ function About() {
                         <b>Phone</b> {information.phone}
                       </li>
                     )}
-                    {!information.nationality ? null : (
-                      <li>
-                        <b>Nationality</b> {information.nationality}
-                      </li>
-                    )}
-                    {!information.language ? null : (
-                      <li>
-                        <b>Languages</b> {information.language}
-                      </li>
-                    )}
                     {!information.email ? null : (
                       <li>
                         <b>Email</b> {information.email}
                       </li>
                     )}
+                    {!information.location ? null : (
+                      <li>
+                        <b>Location</b> {information.location}
+                      </li>
+                    )}
+
                     {!information.address ? null : (
                       <li>
                         <b>Address</b> {information.address}
@@ -136,8 +139,12 @@ function About() {
                       </li>
                     )}
                   </ul>
-                  <a href={information.cvfile} className="mi-button">
-                    Download CV
+                  <a
+                    href={information.cvUrl}
+                    target="_blank"
+                    className="mi-button"
+                  >
+                    View Resume
                   </a>
                 </div>
               </div>

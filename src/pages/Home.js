@@ -1,17 +1,17 @@
-import axios from "axios";
 import React, { Suspense, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import Layout from "../components/Layout";
 import Particle from "../components/Particle";
 import Socialicons from "../components/Socialicons";
 import Spinner from "../components/Spinner";
+import api from "../utils/api";
 
 function Home({ lightMode }) {
-  const [information, setInformation] = useState("");
+  const [siteSettings, setSiteSettings] = useState({});
 
   useEffect(() => {
-    axios.get("/api/information").then((response) => {
-      setInformation(response.data);
+    api.get("/portfolio/site-settings").then((response) => {
+      setSiteSettings(response.data.data);
     });
   }, []);
 
@@ -32,10 +32,17 @@ function Home({ lightMode }) {
               <div className="col-lg-10 col-12">
                 <div className="mi-home-content">
                   <h1>
-                    Hi, I am{" "}
-                    <span className="color-theme">{information.name}</span>
+                    {siteSettings.heroTitle || "Hi, I am"}{" "}
+                    <span className="color-theme">{siteSettings.fullName}</span>
                   </h1>
-                  <p>{information.aboutContent}</p>
+                  <h2>{siteSettings.heroSubtitle}</h2>
+                  {siteSettings.homeDescription && (
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: siteSettings.homeDescription,
+                      }}
+                    />
+                  )}
                   <Socialicons bordered />
                 </div>
               </div>

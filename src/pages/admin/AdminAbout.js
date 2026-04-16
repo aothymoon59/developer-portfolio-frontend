@@ -34,7 +34,10 @@ function AdminAbout() {
   const [loading, setLoading] = useState(true);
   const [services, setServices] = useState([]);
   const [reviews, setReviews] = useState([]);
-  const [serviceModal, setServiceModal] = useState({ open: false, record: null });
+  const [serviceModal, setServiceModal] = useState({
+    open: false,
+    record: null,
+  });
   const [reviewModal, setReviewModal] = useState({ open: false, record: null });
   const [preview, setPreview] = useState(null);
   const [apiMessage, contextHolder] = message.useMessage();
@@ -48,7 +51,7 @@ function AdminAbout() {
       setReviews(response.data.data.reviews || []);
     } catch (error) {
       apiMessage.error(
-        error.response?.data?.message || "Unable to load about content."
+        error.response?.data?.message || "Unable to load about content.",
       );
     } finally {
       setLoading(false);
@@ -75,7 +78,7 @@ function AdminAbout() {
       loadData();
     } catch (error) {
       apiMessage.error(
-        error.response?.data?.message || "Unable to update about content."
+        error.response?.data?.message || "Unable to update about content.",
       );
     } finally {
       setSaving(false);
@@ -90,7 +93,7 @@ function AdminAbout() {
         title: "",
         description: "",
         sortOrder: 0,
-      }
+      },
     );
   };
 
@@ -104,7 +107,7 @@ function AdminAbout() {
         reviewerTitle: "",
         officeName: "",
         sortOrder: 0,
-      }
+      },
     );
   };
 
@@ -126,9 +129,13 @@ function AdminAbout() {
         },
       });
       if (serviceModal.record?.id) {
-        await adminApi.put(`/admin/about/services/${serviceModal.record.id}`, formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
+        await adminApi.put(
+          `/admin/about/services/${serviceModal.record.id}`,
+          formData,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+          },
+        );
       } else {
         await adminApi.post("/admin/about/services", formData, {
           headers: { "Content-Type": "multipart/form-data" },
@@ -138,14 +145,19 @@ function AdminAbout() {
       closeServiceModal();
       loadData();
     } catch (error) {
-      apiMessage.error(error.response?.data?.message || "Unable to save service.");
+      apiMessage.error(
+        error.response?.data?.message || "Unable to save service.",
+      );
     }
   };
 
   const handleReviewSubmit = async (values) => {
     try {
       if (reviewModal.record?.id) {
-        await adminApi.put(`/admin/about/reviews/${reviewModal.record.id}`, values);
+        await adminApi.put(
+          `/admin/about/reviews/${reviewModal.record.id}`,
+          values,
+        );
       } else {
         await adminApi.post("/admin/about/reviews", values);
       }
@@ -153,17 +165,23 @@ function AdminAbout() {
       closeReviewModal();
       loadData();
     } catch (error) {
-      apiMessage.error(error.response?.data?.message || "Unable to save review.");
+      apiMessage.error(
+        error.response?.data?.message || "Unable to save review.",
+      );
     }
   };
 
   const handleDelete = async (type, id) => {
     try {
       await adminApi.delete(`/admin/about/${type}/${id}`);
-      apiMessage.success(`${type === "services" ? "Service" : "Review"} deleted successfully.`);
+      apiMessage.success(
+        `${type === "services" ? "Service" : "Review"} deleted successfully.`,
+      );
       loadData();
     } catch (error) {
-      apiMessage.error(error.response?.data?.message || "Unable to delete item.");
+      apiMessage.error(
+        error.response?.data?.message || "Unable to delete item.",
+      );
     }
   };
 
@@ -182,7 +200,11 @@ function AdminAbout() {
             key: "content",
             label: "About Content",
             children: (
-              <Card className="admin-surface-card" bordered={false} loading={loading}>
+              <Card
+                className="admin-surface-card"
+                bordered={false}
+                loading={loading}
+              >
                 <Form
                   form={form}
                   layout="vertical"
@@ -193,7 +215,9 @@ function AdminAbout() {
                     <Form.Item
                       label="Section Title"
                       name="aboutTitle"
-                      rules={[{ required: true, message: "About title is required." }]}
+                      rules={[
+                        { required: true, message: "About title is required." },
+                      ]}
                     >
                       <Input placeholder="About Me" />
                     </Form.Item>
@@ -201,7 +225,9 @@ function AdminAbout() {
                     <Form.Item
                       label="CV URL"
                       name="cvUrl"
-                      rules={[{ required: true, message: "CV URL is required." }]}
+                      rules={[
+                        { required: true, message: "CV URL is required." },
+                      ]}
                     >
                       <Input placeholder="https://example.com/resume.pdf" />
                     </Form.Item>
@@ -209,12 +235,14 @@ function AdminAbout() {
                     <Form.Item
                       label="About Image"
                       name="aboutImageUrl"
-                      rules={[{ required: true, message: "About image is required." }]}
+                      rules={[
+                        { required: true, message: "About image is required." },
+                      ]}
                     >
                       <AdminImageUpload label="Upload about image" />
                     </Form.Item>
 
-                    <Form.Item
+                    {/* <Form.Item
                       label="About Large Image"
                       name="aboutImageLgUrl"
                       rules={[
@@ -222,20 +250,23 @@ function AdminAbout() {
                       ]}
                     >
                       <AdminImageUpload label="Upload large image" />
-                    </Form.Item>
+                    </Form.Item> */}
                   </div>
 
                   <Form.Item
                     label="Short Description"
                     name="aboutDescription"
                     rules={[
-                      { required: true, message: "Short description is required." },
+                      {
+                        required: true,
+                        message: "Short description is required.",
+                      },
                     ]}
                   >
                     <RichTextField placeholder="Write the summary shown on the about section..." />
                   </Form.Item>
 
-                  <Form.Item
+                  {/* <Form.Item
                     label="Detailed Content"
                     name="aboutDetails"
                     rules={[
@@ -243,7 +274,7 @@ function AdminAbout() {
                     ]}
                   >
                     <RichTextField placeholder="Write the detailed about content..." />
-                  </Form.Item>
+                  </Form.Item> */}
 
                   <Button type="primary" htmlType="submit" loading={saving}>
                     Save About Content
@@ -260,7 +291,11 @@ function AdminAbout() {
                 className="admin-surface-card"
                 bordered={false}
                 extra={
-                  <Button type="primary" icon={<PlusOutlined />} onClick={() => openServiceModal()}>
+                  <Button
+                    type="primary"
+                    icon={<PlusOutlined />}
+                    onClick={() => openServiceModal()}
+                  >
                     Add Service
                   </Button>
                 }
@@ -271,21 +306,40 @@ function AdminAbout() {
                   dataSource={services}
                   pagination={{ pageSize: 6 }}
                   columns={[
-                    { title: "Image", dataIndex: "imageUrl", render: (value) => value || "-" },
+                    {
+                      title: "Image",
+                      dataIndex: "imageUrl",
+                      render: (value) => value || "-",
+                    },
                     { title: "Title", dataIndex: "title" },
                     {
                       title: "Description",
                       dataIndex: "description",
-                      render: (value) => <div className="admin-cell-clamp">{value}</div>,
+                      render: (value) => (
+                        <div className="admin-cell-clamp">{value}</div>
+                      ),
                     },
                     { title: "Sort", dataIndex: "sortOrder" },
                     {
                       title: "Action",
                       render: (_, record) => (
                         <Space>
-                          <Button icon={<EyeOutlined />} onClick={() => setPreview({ type: "service", record })} />
-                          <Button icon={<EditOutlined />} onClick={() => openServiceModal(record)} />
-                          <Popconfirm title="Delete this service?" onConfirm={() => handleDelete("services", record.id)}>
+                          <Button
+                            icon={<EyeOutlined />}
+                            onClick={() =>
+                              setPreview({ type: "service", record })
+                            }
+                          />
+                          <Button
+                            icon={<EditOutlined />}
+                            onClick={() => openServiceModal(record)}
+                          />
+                          <Popconfirm
+                            title="Delete this service?"
+                            onConfirm={() =>
+                              handleDelete("services", record.id)
+                            }
+                          >
                             <Button danger icon={<DeleteOutlined />} />
                           </Popconfirm>
                         </Space>
@@ -304,7 +358,11 @@ function AdminAbout() {
                 className="admin-surface-card"
                 bordered={false}
                 extra={
-                  <Button type="primary" icon={<PlusOutlined />} onClick={() => openReviewModal()}>
+                  <Button
+                    type="primary"
+                    icon={<PlusOutlined />}
+                    onClick={() => openReviewModal()}
+                  >
                     Add Review
                   </Button>
                 }
@@ -318,25 +376,55 @@ function AdminAbout() {
                     {
                       title: "Review",
                       dataIndex: "review",
-                      render: (value) => <div className="admin-cell-clamp">{value}</div>,
+                      render: (value) => (
+                        <div className="admin-cell-clamp">{value}</div>
+                      ),
                     },
                     {
                       title: "Rating",
                       dataIndex: "rating",
                       render: (value) => (
-                        <span>{Array.from({ length: value || 0 }).map((_, index) => <StarFilled key={index} style={{ color: "#faad14", marginRight: 4 }} />)}</span>
+                        <span>
+                          {Array.from({ length: value || 0 }).map(
+                            (_, index) => (
+                              <StarFilled
+                                key={index}
+                                style={{ color: "#faad14", marginRight: 4 }}
+                              />
+                            ),
+                          )}
+                        </span>
                       ),
                     },
                     { title: "Reviewed By", dataIndex: "reviewerName" },
-                    { title: "Title", dataIndex: "reviewerTitle", render: (value) => value || "-" },
-                    { title: "Office", dataIndex: "officeName", render: (value) => value || "-" },
+                    {
+                      title: "Title",
+                      dataIndex: "reviewerTitle",
+                      render: (value) => value || "-",
+                    },
+                    {
+                      title: "Office",
+                      dataIndex: "officeName",
+                      render: (value) => value || "-",
+                    },
                     {
                       title: "Action",
                       render: (_, record) => (
                         <Space>
-                          <Button icon={<EyeOutlined />} onClick={() => setPreview({ type: "review", record })} />
-                          <Button icon={<EditOutlined />} onClick={() => openReviewModal(record)} />
-                          <Popconfirm title="Delete this review?" onConfirm={() => handleDelete("reviews", record.id)}>
+                          <Button
+                            icon={<EyeOutlined />}
+                            onClick={() =>
+                              setPreview({ type: "review", record })
+                            }
+                          />
+                          <Button
+                            icon={<EditOutlined />}
+                            onClick={() => openReviewModal(record)}
+                          />
+                          <Popconfirm
+                            title="Delete this review?"
+                            onConfirm={() => handleDelete("reviews", record.id)}
+                          >
                             <Button danger icon={<DeleteOutlined />} />
                           </Popconfirm>
                         </Space>
@@ -357,7 +445,12 @@ function AdminAbout() {
         onOk={() => serviceForm.submit()}
         width={820}
       >
-        <Form form={serviceForm} layout="vertical" onFinish={handleServiceSubmit} requiredMark={false}>
+        <Form
+          form={serviceForm}
+          layout="vertical"
+          onFinish={handleServiceSubmit}
+          requiredMark={false}
+        >
           <div className="admin-form-grid">
             <Form.Item
               label="Image URL"
@@ -394,19 +487,28 @@ function AdminAbout() {
         onOk={() => reviewForm.submit()}
         width={820}
       >
-        <Form form={reviewForm} layout="vertical" onFinish={handleReviewSubmit} requiredMark={false}>
+        <Form
+          form={reviewForm}
+          layout="vertical"
+          onFinish={handleReviewSubmit}
+          requiredMark={false}
+        >
           <div className="admin-form-grid">
             <Form.Item
               label="Reviewed By Name"
               name="reviewerName"
-              rules={[{ required: true, message: "Reviewer name is required." }]}
+              rules={[
+                { required: true, message: "Reviewer name is required." },
+              ]}
             >
               <Input />
             </Form.Item>
             <Form.Item
               label="Reviewer Title"
               name="reviewerTitle"
-              rules={[{ required: true, message: "Reviewer title is required." }]}
+              rules={[
+                { required: true, message: "Reviewer title is required." },
+              ]}
             >
               <Input />
             </Form.Item>
@@ -438,23 +540,46 @@ function AdminAbout() {
         </Form>
       </Modal>
 
-      <Modal open={Boolean(preview)} footer={null} onCancel={() => setPreview(null)} width={760} title={preview?.type === "service" ? preview?.record?.title : preview?.record?.reviewerName}>
+      <Modal
+        open={Boolean(preview)}
+        footer={null}
+        onCancel={() => setPreview(null)}
+        width={760}
+        title={
+          preview?.type === "service"
+            ? preview?.record?.title
+            : preview?.record?.reviewerName
+        }
+      >
         {preview?.type === "service" ? (
           <div className="admin-preview">
             <div className="admin-preview__image">
-              <img src={resolveAssetUrl(preview.record.imageUrl)} alt={preview.record.title} />
+              <img
+                src={resolveAssetUrl(preview.record.imageUrl)}
+                alt={preview.record.title}
+              />
             </div>
             <div
               className="admin-preview__content"
-              dangerouslySetInnerHTML={{ __html: preview.record.description || "" }}
+              dangerouslySetInnerHTML={{
+                __html: preview.record.description || "",
+              }}
             />
           </div>
         ) : preview?.type === "review" ? (
           <div className="admin-preview">
-            <p><strong>Reviewer:</strong> {preview.record.reviewerName}</p>
-            <p><strong>Title:</strong> {preview.record.reviewerTitle || "-"}</p>
-            <p><strong>Office:</strong> {preview.record.officeName || "-"}</p>
-            <p><strong>Rating:</strong> {preview.record.rating}</p>
+            <p>
+              <strong>Reviewer:</strong> {preview.record.reviewerName}
+            </p>
+            <p>
+              <strong>Title:</strong> {preview.record.reviewerTitle || "-"}
+            </p>
+            <p>
+              <strong>Office:</strong> {preview.record.officeName || "-"}
+            </p>
+            <p>
+              <strong>Rating:</strong> {preview.record.rating}
+            </p>
             <div
               className="admin-preview__content"
               dangerouslySetInnerHTML={{ __html: preview.record.review || "" }}
