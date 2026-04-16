@@ -11,6 +11,7 @@ import {
   MenuUnfoldOutlined,
   MessageOutlined,
   SettingOutlined,
+  ToolOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import { Avatar, Button, Drawer, Layout, Menu, Space, Tag, Typography } from "antd";
@@ -60,6 +61,11 @@ const navigationItems = [
     label: "Settings",
     path: "/admin/settings",
     icon: <SettingOutlined />,
+  },
+  {
+    label: "System Settings",
+    path: "/admin/system-settings",
+    icon: <ToolOutlined />,
   },
 ];
 

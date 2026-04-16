@@ -18,6 +18,7 @@ import AdminMessages from "./pages/admin/AdminMessages";
 import AdminProjects from "./pages/admin/AdminProjects";
 import AdminResume from "./pages/admin/AdminResume";
 import AdminSettings from "./pages/admin/AdminSettings";
+import AdminSystemSettings from "./pages/admin/AdminSystemSettings";
 import { isAdminAuthenticated } from "./pages/admin/adminAuth";
 import BlogDetails from "./pages/BlogDetails";
 import Blogs from "./pages/Blogs";
@@ -160,6 +161,10 @@ function App() {
         {
           path: "settings",
           element: <AdminSettings />,
+        },
+        {
+          path: "system-settings",
+          element: <AdminSystemSettings />,
         },
       ],
     },
