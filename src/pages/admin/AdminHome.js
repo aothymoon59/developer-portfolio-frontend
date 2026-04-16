@@ -17,7 +17,7 @@ function AdminHome() {
         form.setFieldsValue(response.data.data);
       } catch (error) {
         apiMessage.error(
-          error.response?.data?.message || "Unable to load home content."
+          error.response?.data?.message || "Unable to load home content.",
         );
       } finally {
         setLoading(false);
@@ -34,7 +34,7 @@ function AdminHome() {
       apiMessage.success("Home content updated successfully.");
     } catch (error) {
       apiMessage.error(
-        error.response?.data?.message || "Unable to update home content."
+        error.response?.data?.message || "Unable to update home content.",
       );
     } finally {
       setSaving(false);
@@ -58,6 +58,9 @@ function AdminHome() {
           requiredMark={false}
         >
           <div className="admin-form-grid">
+            <Form.Item label="Hero Title" name="heroTitle">
+              <Input placeholder="A short hero headline" />
+            </Form.Item>
             <Form.Item
               label="Full Name"
               name="fullName"
@@ -74,13 +77,9 @@ function AdminHome() {
               <Input placeholder="Senior Software Developer" />
             </Form.Item>
 
-            <Form.Item label="Hero Title" name="heroTitle">
-              <Input placeholder="A short hero headline" />
-            </Form.Item>
-
-            <Form.Item label="Hero Subtitle" name="heroSubtitle">
+            {/* <Form.Item label="Hero Subtitle" name="heroSubtitle">
               <Input placeholder="A short supporting line" />
-            </Form.Item>
+            </Form.Item> */}
           </div>
 
           <Form.Item

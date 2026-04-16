@@ -42,7 +42,10 @@ function AdminProjects() {
   const [viewRecord, setViewRecord] = useState(null);
   const [apiMessage, contextHolder] = message.useMessage();
 
-  const loadProjects = async (page = pagination.current, pageSize = pagination.pageSize) => {
+  const loadProjects = async (
+    page = pagination.current,
+    pageSize = pagination.pageSize,
+  ) => {
     setLoading(true);
     try {
       const response = await adminApi.get("/admin/projects", {
@@ -55,7 +58,9 @@ function AdminProjects() {
         total: response.data.meta.total,
       });
     } catch (error) {
-      apiMessage.error(error.response?.data?.message || "Unable to load projects.");
+      apiMessage.error(
+        error.response?.data?.message || "Unable to load projects.",
+      );
     } finally {
       setLoading(false);
     }
@@ -83,7 +88,7 @@ function AdminProjects() {
         additionalLinks: [{ label: "", url: "" }],
         sortOrder: 0,
         featured: false,
-      }
+      },
     );
   };
 
@@ -106,7 +111,9 @@ function AdminProjects() {
       apiMessage.success("Project deleted successfully.");
       loadProjects();
     } catch (error) {
-      apiMessage.error(error.response?.data?.message || "Unable to delete project.");
+      apiMessage.error(
+        error.response?.data?.message || "Unable to delete project.",
+      );
     }
   };
 
@@ -120,9 +127,13 @@ function AdminProjects() {
         jsonFields: ["technology", "skills", "additionalLinks"],
       });
       if (modalState.record?.id) {
-        await adminApi.put(`/admin/projects/${modalState.record.id}`, formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
+        await adminApi.put(
+          `/admin/projects/${modalState.record.id}`,
+          formData,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+          },
+        );
       } else {
         await adminApi.post("/admin/projects", formData, {
           headers: { "Content-Type": "multipart/form-data" },
@@ -132,7 +143,9 @@ function AdminProjects() {
       closeModal();
       loadProjects();
     } catch (error) {
-      apiMessage.error(error.response?.data?.message || "Unable to save project.");
+      apiMessage.error(
+        error.response?.data?.message || "Unable to save project.",
+      );
     } finally {
       setSubmitting(false);
     }
@@ -146,7 +159,11 @@ function AdminProjects() {
         description="Add, view, edit, and delete projects with rich text details and multi-value fields."
         items={[{ title: "Admin" }, { title: "Projects" }]}
         extra={
-          <Button type="primary" icon={<PlusOutlined />} onClick={() => openModal()}>
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => openModal()}
+          >
             Add Project
           </Button>
         }
@@ -165,22 +182,23 @@ function AdminProjects() {
             { title: "Title", dataIndex: "title" },
             { title: "Subtitle", dataIndex: "subTitle" },
             {
-              title: "Skills",
-              dataIndex: "skills",
-              render: (items) =>
-                items?.length ? items.map((item) => <Tag key={item}>{item}</Tag>) : "-",
-            },
-            {
               title: "Featured",
               dataIndex: "featured",
-              render: (value) => (value ? <Tag color="gold">Featured</Tag> : "No"),
+              render: (value) =>
+                value ? <Tag color="gold">Featured</Tag> : "No",
             },
             {
               title: "Action",
               render: (_, record) => (
                 <Space>
-                  <Button icon={<EyeOutlined />} onClick={() => setViewRecord(record)} />
-                  <Button icon={<EditOutlined />} onClick={() => openModal(record)} />
+                  <Button
+                    icon={<EyeOutlined />}
+                    onClick={() => setViewRecord(record)}
+                  />
+                  <Button
+                    icon={<EditOutlined />}
+                    onClick={() => openModal(record)}
+                  />
                   <Popconfirm
                     title="Delete this project?"
                     onConfirm={() => handleDelete(record.id)}
@@ -201,8 +219,14 @@ function AdminProjects() {
         onOk={() => form.submit()}
         confirmLoading={submitting}
         width={960}
+        maskClosable={false}
       >
-        <Form form={form} layout="vertical" onFinish={handleSubmit} requiredMark={false}>
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={handleSubmit}
+          requiredMark={false}
+        >
           <div className="admin-form-grid">
             <Form.Item
               label="Title"
@@ -225,13 +249,15 @@ function AdminProjects() {
             >
               <Input />
             </Form.Item>
-            <Form.Item label="Summary" name="summary">
+            {/* <Form.Item label="Summary" name="summary">
               <Input />
-            </Form.Item>
+            </Form.Item> */}
             <Form.Item
               label="Project Image"
               name="imageUrl"
-              rules={[{ required: true, message: "Project image is required." }]}
+              rules={[
+                { required: true, message: "Project image is required." },
+              ]}
             >
               <AdminImageUpload label="Upload project image" />
             </Form.Item>
@@ -263,11 +289,13 @@ function AdminProjects() {
             <Form.Item
               label="Technologies"
               name="technology"
-              rules={[{ required: true, message: "Technologies are required." }]}
+              rules={[
+                { required: true, message: "Technologies are required." },
+              ]}
             >
               <Select mode="tags" placeholder="Add technologies" />
             </Form.Item>
-            <Form.Item
+            {/* <Form.Item
               label="Skills"
               name="skills"
               rules={[{ required: true, message: "Skills are required." }]}
@@ -282,7 +310,7 @@ function AdminProjects() {
                 }))}
                 placeholder="Select or add skills"
               />
-            </Form.Item>
+            </Form.Item> */}
             <Form.Item label="Sort Order" name="sortOrder">
               <InputNumber min={0} style={{ width: "100%" }} />
             </Form.Item>
@@ -309,7 +337,11 @@ function AdminProjects() {
               <div className="admin-form-list">
                 <div className="admin-form-list__header">
                   <span>Additional Links</span>
-                  <Button icon={<PlusOutlined />} onClick={() => add()} type="dashed">
+                  <Button
+                    icon={<PlusOutlined />}
+                    onClick={() => add()}
+                    type="dashed"
+                  >
                     Add Link
                   </Button>
                 </div>
@@ -319,7 +351,9 @@ function AdminProjects() {
                       {...field}
                       label="Label"
                       name={[field.name, "label"]}
-                      rules={[{ required: true, message: "Label is required." }]}
+                      rules={[
+                        { required: true, message: "Label is required." },
+                      ]}
                     >
                       <Input placeholder="Case study" />
                     </Form.Item>
@@ -348,16 +382,30 @@ function AdminProjects() {
         onCancel={() => setViewRecord(null)}
         footer={null}
         width={860}
+        maskClosable={true}
       >
         {viewRecord ? (
-            <div className="admin-preview">
+          <div className="admin-preview">
             <div className="admin-preview__image">
-              <img src={resolveAssetUrl(viewRecord.imageUrl)} alt={viewRecord.title} />
+              <img
+                src={resolveAssetUrl(viewRecord.imageUrl)}
+                alt={viewRecord.title}
+              />
             </div>
-            <p><strong>Subtitle:</strong> {viewRecord.subTitle}</p>
-            <p><strong>Live URL:</strong> {viewRecord.liveUrl || "-"}</p>
-            <p><strong>Frontend Github:</strong> {viewRecord.frontendRepoUrl || "-"}</p>
-            <p><strong>Backend Github:</strong> {viewRecord.backendRepoUrl || "-"}</p>
+            <p>
+              <strong>Subtitle:</strong> {viewRecord.subTitle}
+            </p>
+            <p>
+              <strong>Live URL:</strong> {viewRecord.liveUrl || "-"}
+            </p>
+            <p>
+              <strong>Frontend Github:</strong>{" "}
+              {viewRecord.frontendRepoUrl || "-"}
+            </p>
+            <p>
+              <strong>Backend Github:</strong>{" "}
+              {viewRecord.backendRepoUrl || "-"}
+            </p>
             <div
               className="admin-preview__content"
               dangerouslySetInnerHTML={{ __html: viewRecord.description || "" }}

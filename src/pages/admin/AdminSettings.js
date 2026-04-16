@@ -24,7 +24,7 @@ function AdminSettings() {
       } catch (requestError) {
         apiMessage.error(
           requestError.response?.data?.message ||
-            "Unable to load current site settings."
+            "Unable to load current site settings.",
         );
       } finally {
         setLoading(false);
@@ -62,7 +62,7 @@ function AdminSettings() {
     } catch (requestError) {
       apiMessage.error(
         requestError.response?.data?.message ||
-          "Unable to update site settings."
+          "Unable to update site settings.",
       );
     } finally {
       setIsSubmitting(false);
@@ -101,14 +101,14 @@ function AdminSettings() {
               <AdminImageUpload label="Upload logo" />
             </Form.Item>
             <Form.Item
-              label="Primary Email"
+              label="Email"
               name="email"
               rules={[{ required: true, message: "Email is required." }]}
             >
               <Input />
             </Form.Item>
             <Form.Item
-              label="Primary Phone"
+              label="Phone"
               name="phone"
               rules={[{ required: true, message: "Phone is required." }]}
             >
@@ -120,22 +120,6 @@ function AdminSettings() {
               rules={[{ required: true, message: "Location is required." }]}
             >
               <Input />
-            </Form.Item>
-            <Form.Item
-              label="Phone Numbers"
-              name="phoneNumbers"
-              rules={[{ required: true, message: "Phone numbers are required." }]}
-            >
-              <Input placeholder="+8801770000000, +8801880000000" />
-            </Form.Item>
-            <Form.Item
-              label="Email Addresses"
-              name="emailAddresses"
-              rules={[
-                { required: true, message: "Email addresses are required." },
-              ]}
-            >
-              <Input placeholder="hello@example.com, admin@example.com" />
             </Form.Item>
             <Form.Item label="Github URL" name="githubUrl">
               <Input />
@@ -157,7 +141,7 @@ function AdminSettings() {
             </Form.Item>
           </div>
 
-          <Form.Item
+          {/* <Form.Item
             label="Contact Description"
             name="contactDescription"
             rules={[
@@ -165,7 +149,7 @@ function AdminSettings() {
             ]}
           >
             <RichTextField placeholder="Write contact page supporting text..." />
-          </Form.Item>
+          </Form.Item> */}
 
           <Button type="primary" htmlType="submit" loading={isSubmitting}>
             Save Settings

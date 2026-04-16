@@ -35,7 +35,7 @@ function Home({ lightMode }) {
                     {siteSettings.heroTitle || "Hi, I am"}{" "}
                     <span className="color-theme">{siteSettings.fullName}</span>
                   </h1>
-                  <h2>{siteSettings.heroSubtitle}</h2>
+                  <h2>{siteSettings.jobTitle}</h2>
                   {siteSettings.homeDescription && (
                     <div
                       dangerouslySetInnerHTML={{

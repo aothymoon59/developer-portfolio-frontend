@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import {
   DeleteOutlined,
   EditOutlined,
+  EyeOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
 import {
@@ -53,6 +54,7 @@ function AdminResume() {
     open: false,
     type: "skills",
     record: null,
+    mode: "add",
   });
   const [apiMessage, contextHolder] = message.useMessage();
   const [form] = Form.useForm();
@@ -63,7 +65,7 @@ function AdminResume() {
       setData(response.data.data);
     } catch (error) {
       apiMessage.error(
-        error.response?.data?.message || "Unable to load resume data."
+        error.response?.data?.message || "Unable to load resume data.",
       );
     } finally {
       setLoading(false);
@@ -74,60 +76,47 @@ function AdminResume() {
     loadResume();
   }, []);
 
-  const openModal = (type, record = null) => {
-    setModalState({ open: true, type, record });
+  const openModal = (type, record = null, mode = "edit") => {
+    setModalState({ open: true, type, record, mode });
+
+    const values = record
+      ? {
+          ...record,
+          startDate: record.startDate ? dayjs(record.startDate) : null,
+          endDate: record.endDate ? dayjs(record.endDate) : null,
+        }
+      : {
+          company: "",
+          position: "",
+          startDate: null,
+          endDate: null,
+          isCurrent: false,
+          department: "",
+          sortOrder: 0,
+          description: "",
+          institute: "",
+          degree: "",
+          fieldOfStudy: "",
+          grade: "",
+        };
 
     if (type === "skills") {
       form.setFieldsValue(
-        record || { name: "", category: "", level: 80, icon: "", sortOrder: 0 }
+        record || { name: "", category: "", level: 80, icon: "", sortOrder: 0 },
       );
       return;
     }
 
-    if (type === "experiences") {
-      form.setFieldsValue(
-        record
-          ? {
-              ...record,
-              startDate: record.startDate ? dayjs(record.startDate) : null,
-              endDate: record.endDate ? dayjs(record.endDate) : null,
-            }
-          : {
-              company: "",
-              position: "",
-              startDate: null,
-              endDate: null,
-              isCurrent: false,
-              technologies: [],
-              sortOrder: 0,
-              description: "",
-            }
-      );
-      return;
-    }
-
-    form.setFieldsValue(
-      record
-        ? {
-            ...record,
-            startDate: record.startDate ? dayjs(record.startDate) : null,
-            endDate: record.endDate ? dayjs(record.endDate) : null,
-          }
-        : {
-            institute: "",
-            degree: "",
-            fieldOfStudy: "",
-            startDate: null,
-            endDate: null,
-            grade: "",
-            sortOrder: 0,
-            description: "",
-          }
-    );
+    form.setFieldsValue(values);
   };
 
   const closeModal = () => {
-    setModalState((previous) => ({ ...previous, open: false, record: null }));
+    setModalState((previous) => ({
+      ...previous,
+      open: false,
+      record: null,
+      mode: "add",
+    }));
     form.resetFields();
   };
 
@@ -169,6 +158,8 @@ function AdminResume() {
     }
   };
 
+  const isViewMode = modalState.mode === "view";
+
   const tabs = useMemo(
     () => [
       {
@@ -182,8 +173,16 @@ function AdminResume() {
             pagination={{ pageSize: 6 }}
             columns={[
               { title: "Skill", dataIndex: "name" },
-              { title: "Category", dataIndex: "category", render: (value) => value || "-" },
-              { title: "Level", dataIndex: "level", render: (value) => `${value || 0}%` },
+              {
+                title: "Category",
+                dataIndex: "category",
+                render: (value) => value || "-",
+              },
+              {
+                title: "Level",
+                dataIndex: "level",
+                render: (value) => `${value || 0}%`,
+              },
               { title: "Sort", dataIndex: "sortOrder" },
               {
                 title: "Action",
@@ -219,10 +218,9 @@ function AdminResume() {
               { title: "Company", dataIndex: "company" },
               { title: "Position", dataIndex: "position" },
               {
-                title: "Technologies",
-                dataIndex: "technologies",
-                render: (items) =>
-                  items?.length ? items.map((item) => <Tag key={item}>{item}</Tag>) : "-",
+                title: "Department",
+                dataIndex: "department",
+                render: (value) => value || "-",
               },
               { title: "Sort", dataIndex: "sortOrder" },
               {
@@ -230,8 +228,12 @@ function AdminResume() {
                 render: (_, record) => (
                   <Space>
                     <Button
+                      icon={<EyeOutlined />}
+                      onClick={() => openModal("experiences", record, "view")}
+                    />
+                    <Button
                       icon={<EditOutlined />}
-                      onClick={() => openModal("experiences", record)}
+                      onClick={() => openModal("experiences", record, "edit")}
                     />
                     <Popconfirm
                       title="Delete this experience?"
@@ -258,8 +260,16 @@ function AdminResume() {
             columns={[
               { title: "Institute", dataIndex: "institute" },
               { title: "Degree", dataIndex: "degree" },
-              { title: "Field", dataIndex: "fieldOfStudy", render: (value) => value || "-" },
-              { title: "Grade", dataIndex: "grade", render: (value) => value || "-" },
+              {
+                title: "Field",
+                dataIndex: "fieldOfStudy",
+                render: (value) => value || "-",
+              },
+              {
+                title: "Grade",
+                dataIndex: "grade",
+                render: (value) => value || "-",
+              },
               {
                 title: "Action",
                 render: (_, record) => (
@@ -282,7 +292,7 @@ function AdminResume() {
         ),
       },
     ],
-    [data, loading]
+    [data, loading],
   );
 
   return (
@@ -313,13 +323,29 @@ function AdminResume() {
 
       <Modal
         open={modalState.open}
-        title={`${modalState.record ? "Edit" : "Add"} ${entityConfig[modalState.type].title}`}
+        title={`${modalState.mode === "view" ? "View" : modalState.record ? "Edit" : "Add"} ${entityConfig[modalState.type].title}`}
         onCancel={closeModal}
-        onOk={() => form.submit()}
+        onOk={modalState.mode === "view" ? undefined : () => form.submit()}
+        footer={
+          modalState.mode === "view"
+            ? [
+                <Button key="close" type="primary" onClick={closeModal}>
+                  Close
+                </Button>,
+              ]
+            : undefined
+        }
         confirmLoading={saving}
         width={820}
+        maskClosable={false}
       >
-        <Form form={form} layout="vertical" onFinish={handleSubmit} requiredMark={false}>
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={handleSubmit}
+          requiredMark={false}
+          disabled={isViewMode}
+        >
           {modalState.type === "skills" ? (
             <div className="admin-form-grid">
               <Form.Item
@@ -365,19 +391,17 @@ function AdminResume() {
                 <Form.Item
                   label="Start Date"
                   name="startDate"
-                  rules={[{ required: true, message: "Start date is required." }]}
+                  rules={[
+                    { required: true, message: "Start date is required." },
+                  ]}
                 >
                   <DatePicker style={{ width: "100%" }} />
                 </Form.Item>
                 <Form.Item label="End Date" name="endDate">
                   <DatePicker style={{ width: "100%" }} />
                 </Form.Item>
-                <Form.Item
-                  label="Technologies"
-                  name="technologies"
-                  rules={[{ required: true, message: "Technologies are required." }]}
-                >
-                  <Select mode="tags" placeholder="Add technologies" />
+                <Form.Item label="Department" name="department">
+                  <Input placeholder="Write department name" />
                 </Form.Item>
                 <Form.Item label="Sort Order" name="sortOrder">
                   <InputNumber min={0} style={{ width: "100%" }} />
@@ -386,9 +410,14 @@ function AdminResume() {
               <Form.Item
                 label="Description"
                 name="description"
-                rules={[{ required: true, message: "Description is required." }]}
+                rules={[
+                  { required: true, message: "Description is required." },
+                ]}
               >
-                <RichTextField placeholder="Write the experience details..." />
+                <RichTextField
+                  placeholder="Write the experience details..."
+                  disabled={isViewMode}
+                />
               </Form.Item>
             </>
           ) : null}
@@ -399,7 +428,9 @@ function AdminResume() {
                 <Form.Item
                   label="Institute"
                   name="institute"
-                  rules={[{ required: true, message: "Institute is required." }]}
+                  rules={[
+                    { required: true, message: "Institute is required." },
+                  ]}
                 >
                   <Input />
                 </Form.Item>
@@ -429,9 +460,14 @@ function AdminResume() {
               <Form.Item
                 label="Description"
                 name="description"
-                rules={[{ required: true, message: "Description is required." }]}
+                rules={[
+                  { required: true, message: "Description is required." },
+                ]}
               >
-                <RichTextField placeholder="Write the education details..." />
+                <RichTextField
+                  placeholder="Write the education details..."
+                  disabled={isViewMode}
+                />
               </Form.Item>
             </>
           ) : null}

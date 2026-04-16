@@ -12,7 +12,7 @@ const modules = {
   ],
 };
 
-function RichTextField({ value, onChange, placeholder }) {
+function RichTextField({ value, onChange, placeholder, disabled }) {
   return (
     <div className="admin-richtext">
       <ReactQuill
@@ -21,6 +21,8 @@ function RichTextField({ value, onChange, placeholder }) {
         onChange={onChange}
         modules={modules}
         placeholder={placeholder}
+        readOnly={disabled}
+        bounds=".admin-richtext"
       />
     </div>
   );

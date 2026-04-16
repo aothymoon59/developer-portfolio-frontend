@@ -43,7 +43,10 @@ function AdminBlogs() {
   const [viewRecord, setViewRecord] = useState(null);
   const [apiMessage, contextHolder] = message.useMessage();
 
-  const loadBlogs = async (page = pagination.current, pageSize = pagination.pageSize) => {
+  const loadBlogs = async (
+    page = pagination.current,
+    pageSize = pagination.pageSize,
+  ) => {
     setLoading(true);
     try {
       const response = await adminApi.get("/admin/blogs", {
@@ -56,7 +59,9 @@ function AdminBlogs() {
         total: response.data.meta.total,
       });
     } catch (error) {
-      apiMessage.error(error.response?.data?.message || "Unable to load blogs.");
+      apiMessage.error(
+        error.response?.data?.message || "Unable to load blogs.",
+      );
     } finally {
       setLoading(false);
     }
@@ -77,14 +82,13 @@ function AdminBlogs() {
         : {
             title: "",
             slug: "",
-            subTitle: "",
             excerpt: "",
             content: "",
             coverImage: "",
             tags: [],
             published: false,
             publishedAt: null,
-          }
+          },
     );
   };
 
@@ -107,7 +111,9 @@ function AdminBlogs() {
       apiMessage.success("Blog deleted successfully.");
       loadBlogs();
     } catch (error) {
-      apiMessage.error(error.response?.data?.message || "Unable to delete blog.");
+      apiMessage.error(
+        error.response?.data?.message || "Unable to delete blog.",
+      );
     }
   };
 
@@ -152,7 +158,11 @@ function AdminBlogs() {
         description="Create and manage blog posts with rich text content and paginated tables."
         items={[{ title: "Admin" }, { title: "Blogs" }]}
         extra={
-          <Button type="primary" icon={<PlusOutlined />} onClick={() => openModal()}>
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => openModal()}
+          >
             Add Blog
           </Button>
         }
@@ -169,12 +179,13 @@ function AdminBlogs() {
           }
           columns={[
             { title: "Title", dataIndex: "title" },
-            { title: "Subtitle", dataIndex: "subTitle" },
             {
               title: "Tags",
               dataIndex: "tags",
               render: (items) =>
-                items?.length ? items.map((item) => <Tag key={item}>{item}</Tag>) : "-",
+                items?.length
+                  ? items.map((item) => <Tag key={item}>{item}</Tag>)
+                  : "-",
             },
             {
               title: "Status",
@@ -189,8 +200,14 @@ function AdminBlogs() {
               title: "Action",
               render: (_, record) => (
                 <Space>
-                  <Button icon={<EyeOutlined />} onClick={() => setViewRecord(record)} />
-                  <Button icon={<EditOutlined />} onClick={() => openModal(record)} />
+                  <Button
+                    icon={<EyeOutlined />}
+                    onClick={() => setViewRecord(record)}
+                  />
+                  <Button
+                    icon={<EditOutlined />}
+                    onClick={() => openModal(record)}
+                  />
                   <Popconfirm
                     title="Delete this blog?"
                     onConfirm={() => handleDelete(record.id)}
@@ -212,7 +229,12 @@ function AdminBlogs() {
         confirmLoading={submitting}
         width={960}
       >
-        <Form form={form} layout="vertical" onFinish={handleSubmit} requiredMark={false}>
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={handleSubmit}
+          requiredMark={false}
+        >
           <div className="admin-form-grid">
             <Form.Item
               label="Title"
@@ -228,13 +250,13 @@ function AdminBlogs() {
             >
               <Input readOnly />
             </Form.Item>
-            <Form.Item
+            {/* <Form.Item
               label="Subtitle"
               name="subTitle"
               rules={[{ required: true, message: "Subtitle is required." }]}
             >
               <Input />
-            </Form.Item>
+            </Form.Item> */}
             <Form.Item
               label="Cover Image"
               name="coverImage"
@@ -299,9 +321,14 @@ function AdminBlogs() {
         {viewRecord ? (
           <div className="admin-preview">
             <div className="admin-preview__image">
-              <img src={resolveAssetUrl(viewRecord.coverImage)} alt={viewRecord.title} />
+              <img
+                src={resolveAssetUrl(viewRecord.coverImage)}
+                alt={viewRecord.title}
+              />
             </div>
-            <p><strong>Subtitle:</strong> {viewRecord.subTitle}</p>
+            <p>
+              <strong>Subtitle:</strong> {viewRecord.subTitle}
+            </p>
             <div
               className="admin-preview__content"
               dangerouslySetInnerHTML={{ __html: viewRecord.content || "" }}

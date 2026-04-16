@@ -10,6 +10,7 @@ import {
   Button,
   Card,
   Form,
+  Image,
   Input,
   InputNumber,
   Modal,
@@ -309,14 +310,18 @@ function AdminAbout() {
                     {
                       title: "Image",
                       dataIndex: "imageUrl",
-                      render: (value) => value || "-",
+                      render: (value) =>
+                        <Image width={40} src={value} /> || "-",
                     },
                     { title: "Title", dataIndex: "title" },
                     {
                       title: "Description",
                       dataIndex: "description",
                       render: (value) => (
-                        <div className="admin-cell-clamp">{value}</div>
+                        <div
+                          className="admin-cell-clamp"
+                          dangerouslySetInnerHTML={{ __html: value }}
+                        />
                       ),
                     },
                     { title: "Sort", dataIndex: "sortOrder" },
@@ -377,7 +382,10 @@ function AdminAbout() {
                       title: "Review",
                       dataIndex: "review",
                       render: (value) => (
-                        <div className="admin-cell-clamp">{value}</div>
+                        <div
+                          className="admin-cell-clamp"
+                          dangerouslySetInnerHTML={{ __html: value }}
+                        />
                       ),
                     },
                     {
@@ -403,7 +411,7 @@ function AdminAbout() {
                       render: (value) => value || "-",
                     },
                     {
-                      title: "Office",
+                      title: "Workplace",
                       dataIndex: "officeName",
                       render: (value) => value || "-",
                     },
@@ -444,6 +452,7 @@ function AdminAbout() {
         onCancel={closeServiceModal}
         onOk={() => serviceForm.submit()}
         width={820}
+        maskClosable={false}
       >
         <Form
           form={serviceForm}
@@ -486,6 +495,7 @@ function AdminAbout() {
         onCancel={closeReviewModal}
         onOk={() => reviewForm.submit()}
         width={820}
+        maskClosable={false}
       >
         <Form
           form={reviewForm}
@@ -550,6 +560,7 @@ function AdminAbout() {
             ? preview?.record?.title
             : preview?.record?.reviewerName
         }
+        maskClosable={false}
       >
         {preview?.type === "service" ? (
           <div className="admin-preview">
