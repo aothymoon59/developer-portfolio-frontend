@@ -1,19 +1,13 @@
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense } from "react";
 import { Helmet } from "react-helmet";
 import Layout from "../components/Layout";
 import Particle from "../components/Particle";
 import Socialicons from "../components/Socialicons";
 import Spinner from "../components/Spinner";
-import api from "../utils/api";
+import useSiteSettings from "../hooks/useSiteSettings";
 
 function Home({ lightMode }) {
-  const [siteSettings, setSiteSettings] = useState({});
-
-  useEffect(() => {
-    api.get("/portfolio/site-settings").then((response) => {
-      setSiteSettings(response.data.data);
-    });
-  }, []);
+  const { siteSettings, loading, error } = useSiteSettings();
 
   return (
     <Layout>

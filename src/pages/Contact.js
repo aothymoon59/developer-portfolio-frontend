@@ -7,11 +7,10 @@ import Sectiontitle from "../components/Sectiontitle";
 import Spinner from "../components/Spinner";
 import api from "../utils/api";
 import axios from "axios";
+import useSiteSettings from "../hooks/useSiteSettings";
 
 function Contact() {
-  const [phoneNumbers, setPhoneNumbers] = useState([]);
-  const [emailAddress, setEmailAddress] = useState([]);
-  const [address, setAddress] = useState([]);
+  const { siteSettings, loading, error } = useSiteSettings();
   const [formdata, setFormdata] = useState({
     name: "",
     email: "",
@@ -61,14 +60,6 @@ function Contact() {
     const phnNumber = number;
     return phnNumber;
   };
-
-  useEffect(() => {
-    axios.get("/api/contactinfo").then((response) => {
-      setPhoneNumbers(response.data.phoneNumbers);
-      setEmailAddress(response.data.emailAddress);
-      setAddress(response.data.address);
-    });
-  }, []);
 
   return (
     <Layout>
@@ -155,46 +146,40 @@ function Contact() {
               </div>
               <div className="col-lg-6">
                 <div className="mi-contact-info">
-                  {!phoneNumbers ? null : (
+                  {!siteSettings.phone ? null : (
                     <div className="mi-contact-infoblock">
                       <span className="mi-contact-infoblock-icon">
                         <Icon.Phone />
                       </span>
                       <div className="mi-contact-infoblock-content">
                         <h6>Phone</h6>
-                        {phoneNumbers.map((phoneNumber) => (
-                          <p key={phoneNumber}>
-                            <a href={numberFormatter(phoneNumber)}>
-                              {phoneNumber}
-                            </a>
-                          </p>
-                        ))}
+                        <p>{siteSettings.phone}</p>
                       </div>
                     </div>
                   )}
-                  {!emailAddress ? null : (
+                  {!siteSettings.email ? null : (
                     <div className="mi-contact-infoblock">
                       <span className="mi-contact-infoblock-icon">
                         <Icon.Mail />
                       </span>
                       <div className="mi-contact-infoblock-content">
                         <h6>Email</h6>
-                        {emailAddress.map((email) => (
-                          <p key={email}>
-                            <a href={`mailto:${email}`}>{email}</a>
-                          </p>
-                        ))}
+                        <p>
+                          <a href={`mailto:${siteSettings.email}`}>
+                            {siteSettings.email}
+                          </a>
+                        </p>
                       </div>
                     </div>
                   )}
-                  {!phoneNumbers ? null : (
+                  {!siteSettings.location ? null : (
                     <div className="mi-contact-infoblock">
                       <span className="mi-contact-infoblock-icon">
                         <Icon.MapPin />
                       </span>
                       <div className="mi-contact-infoblock-content">
                         <h6>Address</h6>
-                        <p>{address}</p>
+                        <p>{siteSettings.location}</p>
                       </div>
                     </div>
                   )}

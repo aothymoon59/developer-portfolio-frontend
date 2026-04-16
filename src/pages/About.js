@@ -10,12 +10,14 @@ import Spinner from "../components/Spinner";
 import Testimonial from "../components/Testimonial";
 import { Image } from "../components/common/Image";
 import api from "../utils/api";
+import useSiteSettings from "../hooks/useSiteSettings";
 
 function About() {
   const [toggler, setToggler] = useState(false);
-  const [information, setInformation] = useState({});
   const [services, setServices] = useState([]);
   const [reviews, setReviews] = useState([]);
+  const { siteSettings: information, loading: settingsLoading } =
+    useSiteSettings();
 
   const sliderSettings = {
     dots: false,
@@ -44,9 +46,6 @@ function About() {
   };
 
   useEffect(() => {
-    api.get("/portfolio/site-settings").then((response) => {
-      setInformation(response.data.data);
-    });
     api.get("/portfolio/services").then((response) => {
       setServices(response.data.data);
     });

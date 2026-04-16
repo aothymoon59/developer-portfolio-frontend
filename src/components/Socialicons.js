@@ -1,24 +1,20 @@
 import React, { useState, useEffect } from "react";
 import LineIcon from "react-lineicons";
 import api from "../utils/api";
+import useSiteSettings from "../hooks/useSiteSettings";
 
 function Socialicons(props) {
-  const [socialLinks, setSocialLinks] = useState({});
+  const { siteSettings } = useSiteSettings();
 
-  useEffect(() => {
-    api.get("/portfolio/site-settings").then((response) => {
-      const data = response.data.data;
-      setSocialLinks({
-        facebook: data.facebookUrl,
-        twitter: data.twitterUrl,
-        pinterest: null, // not in API
-        behance: null, // not in API
-        linkedin: data.linkedinUrl,
-        dribbble: null, // not in API
-        github: data.githubUrl,
-      });
-    });
-  }, []);
+  const socialLinks = {
+    facebook: siteSettings.facebookUrl,
+    twitter: siteSettings.twitterUrl,
+    pinterest: null, // not in API
+    behance: null, // not in API
+    linkedin: siteSettings.linkedinUrl,
+    dribbble: null, // not in API
+    github: siteSettings.githubUrl,
+  };
 
   return (
     <ul

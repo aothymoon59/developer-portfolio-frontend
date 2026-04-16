@@ -3,24 +3,20 @@ import LineIcon from "react-lineicons";
 import { Link, NavLink } from "react-router-dom";
 import { Image } from "./common/Image";
 import api from "../utils/api";
+import useSiteSettings from "../hooks/useSiteSettings";
 
 function Header() {
-  const [information, setInformation] = useState({});
   const [navigationToggler, setNavigationToggler] = useState(false);
+  const { siteSettings } = useSiteSettings();
 
   const handleNavigationToggler = () => {
     setNavigationToggler(!navigationToggler);
   };
 
-  useEffect(() => {
-    api.get("/portfolio/site-settings").then((response) => {
-      const data = response.data.data;
-      setInformation({
-        brandImage: data.logoUrl,
-        name: data.fullName,
-      });
-    });
-  }, []);
+  const information = {
+    brandImage: siteSettings.logoUrl,
+    name: siteSettings.fullName,
+  };
 
   return (
     <nav className={navigationToggler ? "mi-header is-visible" : "mi-header"}>
