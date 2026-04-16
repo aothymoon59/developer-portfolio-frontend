@@ -1,41 +1,53 @@
-import axios from "axios";
 import React, { Suspense, useEffect, useState } from "react";
 import * as Icon from "react-feather";
 import { Helmet } from "react-helmet";
+import { message } from "antd";
 import Layout from "../components/Layout";
 import Sectiontitle from "../components/Sectiontitle";
 import Spinner from "../components/Spinner";
+import api from "../utils/api";
+import axios from "axios";
+import useSiteSettings from "../hooks/useSiteSettings";
 
 function Contact() {
-  const [phoneNumbers, setPhoneNumbers] = useState([]);
-  const [emailAddress, setEmailAddress] = useState([]);
-  const [address, setAddress] = useState([]);
+  const { siteSettings, loading, error } = useSiteSettings();
   const [formdata, setFormdata] = useState({
     name: "",
     email: "",
     subject: "",
     message: "",
   });
-  const [error, setError] = useState(false);
-  const [message, setMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const submitHandler = (event) => {
+  const submitHandler = async (event) => {
     event.preventDefault();
     if (!formdata.name) {
-      setError(true);
-      setMessage("Name is required");
+      message.error("Name is required");
     } else if (!formdata.email) {
-      setError(true);
-      setMessage("Email is required");
+      message.error("Email is required");
     } else if (!formdata.subject) {
-      setError(true);
-      setMessage("Subject is required");
+      message.error("Subject is required");
     } else if (!formdata.message) {
-      setError(true);
-      setMessage("Message is required");
+      message.error("Message is required");
     } else {
-      setError(false);
-      setMessage("You message has been sent!!!");
+      try {
+        setIsSubmitting(true);
+        const response = await api.post("/messages", formdata);
+        message.success(response.data.message || "Your message has been sent.");
+        setFormdata({
+          name: "",
+          email: "",
+          subject: "",
+          message: "",
+        });
+      } catch (requestError) {
+        message.error(
+          requestError.response?.data?.message ||
+            "Unable to send your message right now.",
+        );
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
   const handleChange = (event) => {
@@ -48,24 +60,6 @@ function Contact() {
     const phnNumber = number;
     return phnNumber;
   };
-
-  const handleAlerts = () => {
-    if (error && message) {
-      return <div className="alert alert-danger mt-4">{message}</div>;
-    } else if (!error && message) {
-      return <div className="alert alert-success mt-4">{message}</div>;
-    } else {
-      return null;
-    }
-  };
-
-  useEffect(() => {
-    axios.get("/api/contactinfo").then((response) => {
-      setPhoneNumbers(response.data.phoneNumbers);
-      setEmailAddress(response.data.emailAddress);
-      setAddress(response.data.address);
-    });
-  }, []);
 
   return (
     <Layout>
@@ -139,56 +133,53 @@ function Contact() {
                       ></textarea>
                     </div>
                     <div className="mi-form-field">
-                      <button className="mi-button" type="submit">
-                        Send Mail
+                      <button
+                        className="mi-button"
+                        type="submit"
+                        disabled={isSubmitting}
+                      >
+                        {isSubmitting ? "Sending..." : "Send Mail"}
                       </button>
                     </div>
                   </form>
-                  {handleAlerts()}
                 </div>
               </div>
               <div className="col-lg-6">
                 <div className="mi-contact-info">
-                  {!phoneNumbers ? null : (
+                  {!siteSettings.phone ? null : (
                     <div className="mi-contact-infoblock">
                       <span className="mi-contact-infoblock-icon">
                         <Icon.Phone />
                       </span>
                       <div className="mi-contact-infoblock-content">
                         <h6>Phone</h6>
-                        {phoneNumbers.map((phoneNumber) => (
-                          <p key={phoneNumber}>
-                            <a href={numberFormatter(phoneNumber)}>
-                              {phoneNumber}
-                            </a>
-                          </p>
-                        ))}
+                        <p>{siteSettings.phone}</p>
                       </div>
                     </div>
                   )}
-                  {!emailAddress ? null : (
+                  {!siteSettings.email ? null : (
                     <div className="mi-contact-infoblock">
                       <span className="mi-contact-infoblock-icon">
                         <Icon.Mail />
                       </span>
                       <div className="mi-contact-infoblock-content">
                         <h6>Email</h6>
-                        {emailAddress.map((email) => (
-                          <p key={email}>
-                            <a href={`mailto:${email}`}>{email}</a>
-                          </p>
-                        ))}
+                        <p>
+                          <a href={`mailto:${siteSettings.email}`}>
+                            {siteSettings.email}
+                          </a>
+                        </p>
                       </div>
                     </div>
                   )}
-                  {!phoneNumbers ? null : (
+                  {!siteSettings.location ? null : (
                     <div className="mi-contact-infoblock">
                       <span className="mi-contact-infoblock-icon">
                         <Icon.MapPin />
                       </span>
                       <div className="mi-contact-infoblock-content">
                         <h6>Address</h6>
-                        <p>{address}</p>
+                        <p>{siteSettings.location}</p>
                       </div>
                     </div>
                   )}
