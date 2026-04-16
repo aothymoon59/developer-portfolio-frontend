@@ -108,11 +108,11 @@ function App() {
         },
         {
           path: "blogs",
-          element: <Blogs />,
+          element: <Blogs lightMode={lightMode} />,
         },
         {
           path: "blogs/:id/:title",
-          element: <BlogDetails />,
+          element: <BlogDetails lightMode={lightMode} />,
         },
         {
           path: "contact",

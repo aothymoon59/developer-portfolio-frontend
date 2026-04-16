@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { Suspense, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import BlogsView from "../components/BlogsView";
@@ -6,17 +5,18 @@ import Layout from "../components/Layout";
 import Pagination from "../components/Pagination";
 import Sectiontitle from "../components/Sectiontitle";
 import Spinner from "../components/Spinner";
+import api from "../utils/api";
 
-function Blogs() {
+function Blogs({ lightMode }) {
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage] = useState(6);
 
   useEffect(() => {
     let mounted = true;
-    axios.get("/api/blog").then((response) => {
+    api.get("/portfolio/blogs").then((response) => {
       if (mounted) {
-        setPosts(response.data);
+        setPosts(response?.data?.data || []);
       }
     });
     return () => (mounted = false);
@@ -44,7 +44,7 @@ function Blogs() {
         <div className="mi-about mi-section mi-padding-top mi-padding-bottom">
           <div className="container">
             <Sectiontitle title="Recent Blogs" />
-            <BlogsView blogs={currentPosts} />
+            <BlogsView blogs={currentPosts} lightMode={lightMode} />
             {!(posts.length > postsPerPage) ? null : (
               <Pagination
                 className="mt-50"
