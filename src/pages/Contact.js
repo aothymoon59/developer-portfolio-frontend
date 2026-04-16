@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { Suspense, useEffect, useState } from "react";
 import * as Icon from "react-feather";
 import { Helmet } from "react-helmet";
+import { message } from "antd";
 import Layout from "../components/Layout";
 import Sectiontitle from "../components/Sectiontitle";
 import Spinner from "../components/Spinner";
@@ -17,30 +18,23 @@ function Contact() {
     subject: "",
     message: "",
   });
-  const [error, setError] = useState(false);
-  const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const submitHandler = async (event) => {
     event.preventDefault();
     if (!formdata.name) {
-      setError(true);
-      setMessage("Name is required");
+      message.error("Name is required");
     } else if (!formdata.email) {
-      setError(true);
-      setMessage("Email is required");
+      message.error("Email is required");
     } else if (!formdata.subject) {
-      setError(true);
-      setMessage("Subject is required");
+      message.error("Subject is required");
     } else if (!formdata.message) {
-      setError(true);
-      setMessage("Message is required");
+      message.error("Message is required");
     } else {
       try {
         setIsSubmitting(true);
         const response = await axios.post(`${API_BASE_URL}/messages`, formdata);
-        setError(false);
-        setMessage(response.data.message || "Your message has been sent.");
+        message.success(response.data.message || "Your message has been sent.");
         setFormdata({
           name: "",
           email: "",
@@ -48,10 +42,9 @@ function Contact() {
           message: "",
         });
       } catch (requestError) {
-        setError(true);
-        setMessage(
+        message.error(
           requestError.response?.data?.message ||
-            "Unable to send your message right now."
+            "Unable to send your message right now.",
         );
       } finally {
         setIsSubmitting(false);
@@ -67,16 +60,6 @@ function Contact() {
   const numberFormatter = (number) => {
     const phnNumber = number;
     return phnNumber;
-  };
-
-  const handleAlerts = () => {
-    if (error && message) {
-      return <div className="alert alert-danger mt-4">{message}</div>;
-    } else if (!error && message) {
-      return <div className="alert alert-success mt-4">{message}</div>;
-    } else {
-      return null;
-    }
   };
 
   useEffect(() => {
@@ -159,12 +142,15 @@ function Contact() {
                       ></textarea>
                     </div>
                     <div className="mi-form-field">
-                      <button className="mi-button" type="submit" disabled={isSubmitting}>
+                      <button
+                        className="mi-button"
+                        type="submit"
+                        disabled={isSubmitting}
+                      >
                         {isSubmitting ? "Sending..." : "Send Mail"}
                       </button>
                     </div>
                   </form>
-                  {handleAlerts()}
                 </div>
               </div>
               <div className="col-lg-6">

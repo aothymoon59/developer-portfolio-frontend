@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import {
   AppstoreOutlined,
   BookOutlined,
-  FileTextOutlined,
+  CalendarOutlined,
   FolderOpenOutlined,
   HomeOutlined,
   InfoCircleOutlined,
@@ -14,7 +14,16 @@ import {
   ToolOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Avatar, Button, Drawer, Layout, Menu, Space, Tag, Typography } from "antd";
+import {
+  Avatar,
+  Button,
+  Drawer,
+  Layout,
+  Menu,
+  Space,
+  Tag,
+  Typography,
+} from "antd";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { clearAdminAuth, getAdminUser } from "./adminAuth";
 
@@ -173,7 +182,9 @@ function AdminLayout() {
             <Space>
               <Button
                 className="admin-topbar__menu-button"
-                icon={sidebarOpen ? <MenuFoldOutlined /> : <MenuUnfoldOutlined />}
+                icon={
+                  sidebarOpen ? <MenuFoldOutlined /> : <MenuUnfoldOutlined />
+                }
                 onClick={() => setSidebarOpen((current) => !current)}
               />
               <div>
@@ -184,8 +195,13 @@ function AdminLayout() {
           </div>
 
           <Space>
-            <Tag icon={<FileTextOutlined />} color="processing">
-              Content synced
+            <Tag icon={<CalendarOutlined />} color="processing">
+              {new Date().toLocaleDateString(undefined, {
+                weekday: "short",
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              })}
             </Tag>
           </Space>
         </Header>
