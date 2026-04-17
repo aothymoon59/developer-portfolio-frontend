@@ -1,19 +1,13 @@
-import { Helmet } from "react-helmet";
 import React, { Suspense } from "react";
 import { Link } from "react-router-dom";
 import Layout from "../components/Layout";
+import SiteHelmet from "../components/SiteHelmet";
 import Spinner from "../components/Spinner";
 
 function Notfound() {
   return (
     <Layout>
-      <Helmet>
-        <title>404 - Chester React Personal Portfolio Template</title>
-        <meta
-          name="description"
-          content="Chester React Personal Portfolio Template Not Found Page"
-        />
-      </Helmet>
+      <SiteHelmet pageTitle="404" description="Page not found" />
       <Suspense fallback={<Spinner />}>
         <div className="mi-about-area mi-section">
           <div className="container">

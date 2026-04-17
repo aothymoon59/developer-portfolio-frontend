@@ -25,6 +25,8 @@ import {
   Typography,
 } from "antd";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import SiteHelmet from "../../components/SiteHelmet";
+import useSiteSettings from "../../hooks/useSiteSettings";
 import { clearAdminAuth, getAdminUser } from "./adminAuth";
 
 const { Header, Sider, Content } = Layout;
@@ -84,6 +86,7 @@ function AdminLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const user = useMemo(() => getAdminUser(), []);
+  const { siteSettings } = useSiteSettings();
 
   const pageTitle =
     navigationItems.find((item) => item.path === location.pathname)?.label ||
@@ -112,7 +115,9 @@ function AdminLayout() {
     <div className="admin-sidebar-shell">
       <div className="admin-sidebar-brand">
         <div>
-          <Text className="admin-sidebar-brand__eyebrow">Portfolio CMS</Text>
+          <Text className="admin-sidebar-brand__eyebrow">
+            {siteSettings.siteTitle || "Portfolio CMS"}
+          </Text>
           <Title level={4}>Admin Workspace</Title>
         </div>
       </div>
@@ -153,6 +158,10 @@ function AdminLayout() {
 
   return (
     <Layout className="admin-layout">
+      <SiteHelmet
+        pageTitle={`Admin | ${pageTitle}`}
+        description={`${siteSettings.siteTitle || "Portfolio"} admin panel`}
+      />
       <Sider
         breakpoint="lg"
         collapsedWidth={90}

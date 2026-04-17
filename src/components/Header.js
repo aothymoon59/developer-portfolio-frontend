@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import LineIcon from "react-lineicons";
 import { Link, NavLink } from "react-router-dom";
+import { Skeleton } from "antd";
 import { Image } from "./common/Image";
-import api from "../utils/api";
 import useSiteSettings from "../hooks/useSiteSettings";
 
 function Header() {
   const [navigationToggler, setNavigationToggler] = useState(false);
-  const { siteSettings } = useSiteSettings();
+  const { siteSettings, loading } = useSiteSettings();
 
   const handleNavigationToggler = () => {
     setNavigationToggler(!navigationToggler);
@@ -16,6 +16,8 @@ function Header() {
   const information = {
     brandImage: siteSettings.logoUrl,
     name: siteSettings.fullName,
+    footerCopyright: siteSettings.footerCopyright,
+    siteTitle: siteSettings.siteTitle,
   };
 
   return (
@@ -29,13 +31,18 @@ function Header() {
       </button>
       <div className="mi-header-inner">
         <div className="mi-header-image">
-          <Link to="/">
-            <Image
-              src={information.brandImage}
-              placeholder="/images/about-image-placeholder.png"
-              alt="brandimage"
-            />
-          </Link>
+          {loading ? (
+            <div className="mi-header-logo-skeleton">
+              <Skeleton.Image active className="mi-skeleton-header-logo" />
+            </div>
+          ) : (
+            <Link to="/">
+              <Image
+                src={information.brandImage}
+                placeholder="/images/about-image-placeholder.png"
+              />
+            </Link>
+          )}
         </div>
 
         <ul className="mi-header-menu">
@@ -71,16 +78,8 @@ function Header() {
           </li>
         </ul>
         <p className="mi-header-copyright">
-          &copy; {new Date().getFullYear()}{" "}
-          <b>
-            <a
-              rel="noopener noreferrer"
-              target="_blank"
-              href="https://nuclearthemes.com"
-            >
-              NuclearThemes
-            </a>
-          </b>
+          {information.footerCopyright ||
+            `© ${new Date().getFullYear()} ${information.siteTitle || "Developer Portfolio"}`}
         </p>
       </div>
     </nav>

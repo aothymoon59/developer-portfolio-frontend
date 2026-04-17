@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Button, Card, Form, Input, InputNumber, Switch, message } from "antd";
 import AdminPageHeader from "./components/AdminPageHeader";
+import AdminImageUpload from "./components/AdminImageUpload";
 import adminApi from "./adminApi";
+import { buildMultipartFormData } from "./multipartForm";
 
 function AdminSystemSettings() {
   const [form] = Form.useForm();
@@ -29,7 +31,14 @@ function AdminSystemSettings() {
   const handleSubmit = async (values) => {
     setSaving(true);
     try {
-      await adminApi.put("/admin/system-settings", values);
+      const formData = buildMultipartFormData(values, {
+        fileFields: {
+          faviconUrl: "favicon",
+        },
+      });
+      await adminApi.put("/admin/system-settings", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
       apiMessage.success("System settings updated successfully.");
     } catch (error) {
       apiMessage.error(
@@ -67,6 +76,12 @@ function AdminSystemSettings() {
               <Input.Password />
             </Form.Item>
             <Form.Item label="Cloudinary Folder" name="cloudinaryFolder">
+              <Input />
+            </Form.Item>
+            <Form.Item label="Favicon" name="faviconUrl">
+              <AdminImageUpload label="Upload favicon" />
+            </Form.Item>
+            <Form.Item label="Footer Copyright" name="footerCopyright">
               <Input />
             </Form.Item>
             <Form.Item label="SMTP Host" name="smtpHost">

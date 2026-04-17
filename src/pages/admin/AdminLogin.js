@@ -7,6 +7,8 @@ import {
 } from "@ant-design/icons";
 import { Alert, Button, Card, Col, Form, Input, Row, Space, Typography } from "antd";
 import { Link, useNavigate } from "react-router-dom";
+import SiteHelmet from "../../components/SiteHelmet";
+import useSiteSettings from "../../hooks/useSiteSettings";
 import adminApi from "./adminApi";
 import { setAdminAuth } from "./adminAuth";
 
@@ -17,6 +19,7 @@ function AdminLogin() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [serverMessage, setServerMessage] = useState("");
   const [form] = Form.useForm();
+  const { siteSettings } = useSiteSettings();
 
   useEffect(() => {
     document.body.classList.add("admin-route");
@@ -48,6 +51,10 @@ function AdminLogin() {
 
   return (
     <div className="admin-auth">
+      <SiteHelmet
+        pageTitle="Admin Login"
+        description={`${siteSettings.siteTitle || "Portfolio"} admin login`}
+      />
       <Row gutter={[24, 24]} className="admin-auth__panel">
         <Col xs={24} lg={14}>
           <Card className="admin-auth__intro-card" bordered={false}>
