@@ -195,6 +195,7 @@ function AdminMessages() {
         onCancel={() => setSelectedMessage(null)}
         footer={null}
         width={760}
+        maskClosable={false}
       >
         {selectedMessage ? (
           <Descriptions bordered column={1} size="middle">
@@ -230,6 +231,7 @@ function AdminMessages() {
         confirmLoading={replying}
         okText="Send Reply"
         width={760}
+        maskClosable={false}
       >
         {replyTarget ? (
           <Form
