@@ -5,6 +5,7 @@
   "dependencies": {
     "@ant-design/icons": "^6.1.1",
     "@ohs/use-progressive-image": "^2.0.1",
+    "@tanstack/react-query": "^5.99.0",
     "@tsparticles/react": "^3.0.0",
     "@tsparticles/slim": "^3.8.1",
     "antd": "^6.3.5",

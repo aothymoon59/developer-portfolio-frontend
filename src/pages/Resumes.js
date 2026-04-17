@@ -1,47 +1,26 @@
-import axios from "axios";
-import React, { Suspense, useEffect, useState } from "react";
-import { Helmet } from "react-helmet";
+import React from "react";
 import TrackVisibility from "react-on-screen";
 import Layout from "../components/Layout";
+import { ResumeSkeleton } from "../components/PageSkeleton";
 import Progress from "../components/Progress";
 import Resume from "../components/Resume";
 import Sectiontitle from "../components/Sectiontitle";
+import SiteHelmet from "../components/SiteHelmet";
 import Smalltitle from "../components/Smalltitle";
-import Spinner from "../components/Spinner";
-import api from "../utils/api";
+import { useResumePageQuery } from "../hooks/usePortfolioQueries";
 
 function Resumes() {
-  const [skills, setSkills] = useState([]);
-  const [workingExperience, setWorkingExperience] = useState([]);
-  const [educationExperience, setEducationExperience] = useState([]);
-
-  useEffect(() => {
-    api.get("/portfolio/skills").then((response) => {
-      setSkills(response?.data?.data || []);
-    });
-    api.get("/portfolio/experiences").then((response) => {
-      setWorkingExperience(response?.data?.data || []);
-    });
-    api.get("/portfolio/education").then((response) => {
-      setEducationExperience(response?.data?.data || []);
-    });
-  }, []);
-
-  console.log("skills", skills);
-  console.log("workingExperience", workingExperience);
-  console.log("educationExperience", educationExperience);
+  const { skills, workingExperience, educationExperience, isLoading } =
+    useResumePageQuery();
 
   return (
     <Layout>
-      <Helmet>
-        <title>Resume - Chester React Personal Portfolio Template</title>
-        <meta
-          name="description"
-          content="Chester React Personal Portfolio Template Resume Page"
-        />
-      </Helmet>
-      <Suspense fallback={<Spinner />}>
-        <div className="mi-skills-area mi-section mi-padding-top">
+      <SiteHelmet pageTitle="Resume" description="Resume and experience" />
+      {isLoading ? (
+        <ResumeSkeleton />
+      ) : (
+        <>
+          <div className="mi-skills-area mi-section mi-padding-top">
           <div className="container">
             <Sectiontitle title="My Skills" />
             <div className="mi-skills">
@@ -59,7 +38,7 @@ function Resumes() {
             </div>
           </div>
         </div>
-        <div className="mi-resume-area mi-section mi-padding-top mi-padding-bottom">
+          <div className="mi-resume-area mi-section mi-padding-top mi-padding-bottom">
           <div className="container">
             <Sectiontitle title="Resume" />
             <Smalltitle title="Working Experience" icon="briefcase" />
@@ -76,8 +55,9 @@ function Resumes() {
               ))}
             </div>
           </div>
-        </div>
-      </Suspense>
+          </div>
+        </>
+      )}
     </Layout>
   );
 }

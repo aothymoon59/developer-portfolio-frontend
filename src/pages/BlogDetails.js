@@ -1,48 +1,22 @@
 import Disqus from "disqus-react";
-import React, { Suspense, useEffect, useState } from "react";
-import { Helmet } from "react-helmet";
+import React, { Suspense } from "react";
 import { useParams } from "react-router-dom";
-import { Tag, Spin } from "antd";
+import { Tag } from "antd";
 import Layout from "../components/Layout";
+import { BlogDetailsSkeleton } from "../components/PageSkeleton";
+import SiteHelmet from "../components/SiteHelmet";
 import Spinner from "../components/Spinner";
-import api from "../utils/api";
+import { useBlogDetailsQuery } from "../hooks/usePortfolioQueries";
 
 function BlogDetails({ lightMode }) {
   const params = useParams();
-  const [blog, setBlog] = useState(null);
-  const [loading, setLoading] = useState(true);
   const blogId = params.id;
+  const { data: blog, isLoading } = useBlogDetailsQuery(blogId);
 
-  useEffect(() => {
-    const fetchBlog = async () => {
-      try {
-        const response = await api.get(`/portfolio/blogs/${blogId}`);
-        if (response.data?.success) {
-          setBlog(response.data.data);
-        }
-      } catch (error) {
-        console.error("Error fetching blog:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (blogId) {
-      fetchBlog();
-    }
-  }, [blogId]);
-
-  if (loading) {
+  if (isLoading) {
     return (
       <Layout>
-        <div className="mi-blog-details mi-section mi-padding-top mi-padding-bottom">
-          <div
-            className="container"
-            style={{ textAlign: "center", padding: "50px" }}
-          >
-            <Spin size="large" />
-          </div>
-        </div>
+        <BlogDetailsSkeleton />
       </Layout>
     );
   }
@@ -71,7 +45,7 @@ function BlogDetails({ lightMode }) {
     });
   };
 
-  const disqusShortname = "chester-react";
+  const disqusShortname = "developer-portfolio-blogs";
   const disqusConfig = {
     url: `${window.location.origin}/blogs/${blogId}/${blog.slug}`,
     identifier: blogId,
@@ -80,15 +54,12 @@ function BlogDetails({ lightMode }) {
 
   return (
     <Layout>
-      <Helmet>
-        <title>{blog.title} - Chester React Personal Portfolio Template</title>
-        <meta
-          name="description"
-          content={
-            blog.excerpt ? blog.excerpt.replace(/<[^>]*>/g, "") : blog.title
-          }
-        />
-      </Helmet>
+      <SiteHelmet
+        pageTitle={blog.title}
+        description={
+          blog.excerpt ? blog.excerpt.replace(/<[^>]*>/g, "") : blog.title
+        }
+      />
       <Suspense fallback={<Spinner />}>
         <div className="mi-blog-details mi-section mi-padding-top mi-padding-bottom">
           <div className="container">

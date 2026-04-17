@@ -1,16 +1,15 @@
-import React, { Suspense, useEffect, useState } from "react";
+import React, { useState } from "react";
 import * as Icon from "react-feather";
-import { Helmet } from "react-helmet";
 import { message } from "antd";
 import Layout from "../components/Layout";
+import { ContactSkeleton } from "../components/PageSkeleton";
 import Sectiontitle from "../components/Sectiontitle";
-import Spinner from "../components/Spinner";
+import SiteHelmet from "../components/SiteHelmet";
 import api from "../utils/api";
-import axios from "axios";
 import useSiteSettings from "../hooks/useSiteSettings";
 
 function Contact() {
-  const { siteSettings, loading, error } = useSiteSettings();
+  const { siteSettings, loading } = useSiteSettings();
   const [formdata, setFormdata] = useState({
     name: "",
     email: "",
@@ -63,14 +62,10 @@ function Contact() {
 
   return (
     <Layout>
-      <Helmet>
-        <title>Contact - Chester React Personal Portfolio Template</title>
-        <meta
-          name="description"
-          content="Chester React Personal Portfolio Template Contact Page"
-        />
-      </Helmet>
-      <Suspense fallback={<Spinner />}>
+      <SiteHelmet pageTitle="Contact" description="Contact page" />
+      {loading ? (
+        <ContactSkeleton />
+      ) : (
         <div className="mi-contact-area mi-section mi-padding-top mi-padding-bottom">
           <div className="container">
             <Sectiontitle title="Contact Me" />
@@ -188,7 +183,7 @@ function Contact() {
             </div>
           </div>
         </div>
-      </Suspense>
+      )}
     </Layout>
   );
 }

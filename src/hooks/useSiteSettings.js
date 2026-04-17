@@ -1,48 +1,13 @@
-import { useState, useEffect } from "react";
-import api from "../utils/api";
+import { useSiteSettingsQuery } from "./usePortfolioQueries";
 
 const useSiteSettings = () => {
-  const [siteSettings, setSiteSettings] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchSiteSettings = async () => {
-      try {
-        setLoading(true);
-        const response = await api.get("/portfolio/site-settings");
-        setSiteSettings(response.data.data);
-        setError(null);
-      } catch (err) {
-        setError(err);
-        console.error("Error fetching site settings:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchSiteSettings();
-  }, []);
-
-  const refetch = async () => {
-    try {
-      setLoading(true);
-      const response = await api.get("/portfolio/site-settings");
-      setSiteSettings(response.data.data);
-      setError(null);
-    } catch (err) {
-      setError(err);
-      console.error("Error refetching site settings:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const query = useSiteSettingsQuery();
 
   return {
-    siteSettings,
-    loading,
-    error,
-    refetch,
+    siteSettings: query.data || {},
+    loading: query.isLoading,
+    error: query.error,
+    refetch: query.refetch,
   };
 };
 
