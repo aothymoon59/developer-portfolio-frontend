@@ -1,35 +1,17 @@
-import axios from "axios";
-import React, { Suspense, useEffect, useState } from "react";
+import React from "react";
 import { Helmet } from "react-helmet";
 import TrackVisibility from "react-on-screen";
 import Layout from "../components/Layout";
+import { ResumeSkeleton } from "../components/PageSkeleton";
 import Progress from "../components/Progress";
 import Resume from "../components/Resume";
 import Sectiontitle from "../components/Sectiontitle";
 import Smalltitle from "../components/Smalltitle";
-import Spinner from "../components/Spinner";
-import api from "../utils/api";
+import { useResumePageQuery } from "../hooks/usePortfolioQueries";
 
 function Resumes() {
-  const [skills, setSkills] = useState([]);
-  const [workingExperience, setWorkingExperience] = useState([]);
-  const [educationExperience, setEducationExperience] = useState([]);
-
-  useEffect(() => {
-    api.get("/portfolio/skills").then((response) => {
-      setSkills(response?.data?.data || []);
-    });
-    api.get("/portfolio/experiences").then((response) => {
-      setWorkingExperience(response?.data?.data || []);
-    });
-    api.get("/portfolio/education").then((response) => {
-      setEducationExperience(response?.data?.data || []);
-    });
-  }, []);
-
-  console.log("skills", skills);
-  console.log("workingExperience", workingExperience);
-  console.log("educationExperience", educationExperience);
+  const { skills, workingExperience, educationExperience, isLoading } =
+    useResumePageQuery();
 
   return (
     <Layout>
@@ -40,7 +22,10 @@ function Resumes() {
           content="Chester React Personal Portfolio Template Resume Page"
         />
       </Helmet>
-      <Suspense fallback={<Spinner />}>
+      {isLoading ? (
+        <ResumeSkeleton />
+      ) : (
+        <>
         <div className="mi-skills-area mi-section mi-padding-top">
           <div className="container">
             <Sectiontitle title="My Skills" />
@@ -77,7 +62,8 @@ function Resumes() {
             </div>
           </div>
         </div>
-      </Suspense>
+        </>
+      )}
     </Layout>
   );
 }

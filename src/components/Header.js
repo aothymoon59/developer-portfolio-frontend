@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import LineIcon from "react-lineicons";
 import { Link, NavLink } from "react-router-dom";
+import { Skeleton } from "antd";
 import { Image } from "./common/Image";
-import api from "../utils/api";
 import useSiteSettings from "../hooks/useSiteSettings";
 
 function Header() {
   const [navigationToggler, setNavigationToggler] = useState(false);
-  const { siteSettings } = useSiteSettings();
+  const { siteSettings, loading } = useSiteSettings();
 
   const handleNavigationToggler = () => {
     setNavigationToggler(!navigationToggler);
@@ -29,13 +29,19 @@ function Header() {
       </button>
       <div className="mi-header-inner">
         <div className="mi-header-image">
-          <Link to="/">
-            <Image
-              src={information.brandImage}
-              placeholder="/images/about-image-placeholder.png"
-              alt="brandimage"
-            />
-          </Link>
+          {loading ? (
+            <div className="mi-header-logo-skeleton">
+              <Skeleton.Image active className="mi-skeleton-header-logo" />
+            </div>
+          ) : (
+            <Link to="/">
+              <Image
+                src={information.brandImage}
+                placeholder="/images/about-image-placeholder.png"
+                alt="brandimage"
+              />
+            </Link>
+          )}
         </div>
 
         <ul className="mi-header-menu">

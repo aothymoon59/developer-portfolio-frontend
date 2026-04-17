@@ -1,26 +1,20 @@
-import React, { Suspense, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import BlogsView from "../components/BlogsView";
 import Layout from "../components/Layout";
+import { GridPageSkeleton } from "../components/PageSkeleton";
 import Pagination from "../components/Pagination";
 import Sectiontitle from "../components/Sectiontitle";
-import Spinner from "../components/Spinner";
-import api from "../utils/api";
+import { useBlogsQuery } from "../hooks/usePortfolioQueries";
 
 function Blogs({ lightMode }) {
-  const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage] = useState(6);
+  const { data: posts = [], isLoading } = useBlogsQuery();
 
   useEffect(() => {
-    let mounted = true;
-    api.get("/portfolio/blogs").then((response) => {
-      if (mounted) {
-        setPosts(response?.data?.data || []);
-      }
-    });
-    return () => (mounted = false);
-  }, []);
+    setCurrentPage(1);
+  }, [posts.length]);
 
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
@@ -40,7 +34,9 @@ function Blogs({ lightMode }) {
           content="Chester React Personal Portfolio Template Blogs Page"
         />
       </Helmet>
-      <Suspense fallback={<Spinner />}>
+      {isLoading ? (
+        <GridPageSkeleton columns={2} />
+      ) : (
         <div className="mi-about mi-section mi-padding-top mi-padding-bottom">
           <div className="container">
             <Sectiontitle title="Recent Blogs" />
@@ -56,7 +52,7 @@ function Blogs({ lightMode }) {
             )}
           </div>
         </div>
-      </Suspense>
+      )}
     </Layout>
   );
 }

@@ -1,23 +1,20 @@
 import FsLightbox from "fslightbox-react";
-import React, { Suspense, useEffect, useState } from "react";
+import React, { useState } from "react";
 import * as Icon from "react-feather";
 import { Helmet } from "react-helmet";
 import Slider from "react-slick";
 import Layout from "../components/Layout";
+import { AboutSkeleton } from "../components/PageSkeleton";
 import Sectiontitle from "../components/Sectiontitle";
 import Service from "../components/Service";
-import Spinner from "../components/Spinner";
 import Testimonial from "../components/Testimonial";
 import { Image } from "../components/common/Image";
-import api from "../utils/api";
-import useSiteSettings from "../hooks/useSiteSettings";
+import { useAboutPageQuery } from "../hooks/usePortfolioQueries";
 
 function About() {
   const [toggler, setToggler] = useState(false);
-  const [services, setServices] = useState([]);
-  const [reviews, setReviews] = useState([]);
-  const { siteSettings: information, loading: settingsLoading } =
-    useSiteSettings();
+  const { siteSettings: information, services, reviews, isLoading } =
+    useAboutPageQuery();
 
   const sliderSettings = {
     dots: false,
@@ -45,17 +42,6 @@ function About() {
     setToggler(!toggler);
   };
 
-  useEffect(() => {
-    api.get("/portfolio/services").then((response) => {
-      setServices(response.data.data);
-    });
-    api.get("/portfolio/reviews").then((response) => {
-      setReviews(response.data.data);
-    });
-  }, []);
-
-  console.log("information", information);
-
   return (
     <Layout>
       <Helmet>
@@ -65,7 +51,10 @@ function About() {
           content="Chester React Personal Portfolio Template About Page"
         />
       </Helmet>
-      <Suspense fallback={<Spinner />}>
+      {isLoading ? (
+        <AboutSkeleton />
+      ) : (
+        <>
         <div className="mi-about-area mi-section mi-padding-top">
           <div className="container">
             <Sectiontitle title="About Me" />
@@ -181,7 +170,8 @@ function About() {
             </div>
           </div>
         </div>
-      </Suspense>
+        </>
+      )}
     </Layout>
   );
 }

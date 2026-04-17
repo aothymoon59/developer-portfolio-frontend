@@ -1,13 +1,13 @@
-import React, { Suspense } from "react";
+import React from "react";
 import { Helmet } from "react-helmet";
 import Layout from "../components/Layout";
+import { HomeSkeleton } from "../components/PageSkeleton";
 import Particle from "../components/Particle";
 import Socialicons from "../components/Socialicons";
-import Spinner from "../components/Spinner";
 import useSiteSettings from "../hooks/useSiteSettings";
 
 function Home({ lightMode }) {
-  const { siteSettings, loading, error } = useSiteSettings();
+  const { siteSettings, loading } = useSiteSettings();
 
   return (
     <Layout>
@@ -18,7 +18,9 @@ function Home({ lightMode }) {
           content="Chester React Personal Portfolio Template Homepage"
         />
       </Helmet>
-      <Suspense fallback={<Spinner />}>
+      {loading ? (
+        <HomeSkeleton />
+      ) : (
         <div className="mi-home-area mi-padding-section">
           <Particle lightMode={lightMode} />
           <div className="container">
@@ -43,7 +45,7 @@ function Home({ lightMode }) {
             </div>
           </div>
         </div>
-      </Suspense>
+      )}
     </Layout>
   );
 }
