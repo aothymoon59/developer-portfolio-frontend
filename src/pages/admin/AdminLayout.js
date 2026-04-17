@@ -116,7 +116,8 @@ function AdminLayout() {
       <div className="admin-sidebar-brand">
         <div>
           <Text className="admin-sidebar-brand__eyebrow">
-            {siteSettings.siteTitle || "Portfolio CMS"}
+            {siteSettings.siteTitle?.split(" ")[0] + " Portfolio" ||
+              "Portfolio CMS"}
           </Text>
           <Title level={4}>Admin Workspace</Title>
         </div>
