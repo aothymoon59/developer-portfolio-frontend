@@ -1,12 +1,12 @@
 import FsLightbox from "fslightbox-react";
 import React, { useState } from "react";
 import * as Icon from "react-feather";
-import { Helmet } from "react-helmet";
 import Slider from "react-slick";
 import Layout from "../components/Layout";
 import { AboutSkeleton } from "../components/PageSkeleton";
 import Sectiontitle from "../components/Sectiontitle";
 import Service from "../components/Service";
+import SiteHelmet from "../components/SiteHelmet";
 import Testimonial from "../components/Testimonial";
 import { Image } from "../components/common/Image";
 import { useAboutPageQuery } from "../hooks/usePortfolioQueries";
@@ -44,18 +44,15 @@ function About() {
 
   return (
     <Layout>
-      <Helmet>
-        <title>About - Chester React Personal Portfolio Template</title>
-        <meta
-          name="description"
-          content="Chester React Personal Portfolio Template About Page"
-        />
-      </Helmet>
+      <SiteHelmet
+        pageTitle="About"
+        description="About the developer portfolio"
+      />
       {isLoading ? (
         <AboutSkeleton />
       ) : (
         <>
-        <div className="mi-about-area mi-section mi-padding-top">
+          <div className="mi-about-area mi-section mi-padding-top">
           <div className="container">
             <Sectiontitle title="About Me" />
             <div className="row align-items-center">
@@ -139,7 +136,7 @@ function About() {
             </div>
           </div>
         </div>
-        <div className="mi-service-area mi-section mi-padding-top">
+          <div className="mi-service-area mi-section mi-padding-top">
           <div className="container">
             <Sectiontitle title="Services" />
             <div className="mi-service-wrapper">
@@ -156,7 +153,7 @@ function About() {
             </div>
           </div>
         </div>
-        <div className="mi-review-area mi-section mi-padding-top mi-padding-bottom">
+          <div className="mi-review-area mi-section mi-padding-top mi-padding-bottom">
           <div className="container">
             <Sectiontitle title="Reviews" />
             <div className="row justify-content-center">
@@ -169,7 +166,7 @@ function About() {
               </div>
             </div>
           </div>
-        </div>
+          </div>
         </>
       )}
     </Layout>

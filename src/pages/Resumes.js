@@ -1,11 +1,11 @@
 import React from "react";
-import { Helmet } from "react-helmet";
 import TrackVisibility from "react-on-screen";
 import Layout from "../components/Layout";
 import { ResumeSkeleton } from "../components/PageSkeleton";
 import Progress from "../components/Progress";
 import Resume from "../components/Resume";
 import Sectiontitle from "../components/Sectiontitle";
+import SiteHelmet from "../components/SiteHelmet";
 import Smalltitle from "../components/Smalltitle";
 import { useResumePageQuery } from "../hooks/usePortfolioQueries";
 
@@ -15,18 +15,12 @@ function Resumes() {
 
   return (
     <Layout>
-      <Helmet>
-        <title>Resume - Chester React Personal Portfolio Template</title>
-        <meta
-          name="description"
-          content="Chester React Personal Portfolio Template Resume Page"
-        />
-      </Helmet>
+      <SiteHelmet pageTitle="Resume" description="Resume and experience" />
       {isLoading ? (
         <ResumeSkeleton />
       ) : (
         <>
-        <div className="mi-skills-area mi-section mi-padding-top">
+          <div className="mi-skills-area mi-section mi-padding-top">
           <div className="container">
             <Sectiontitle title="My Skills" />
             <div className="mi-skills">
@@ -44,7 +38,7 @@ function Resumes() {
             </div>
           </div>
         </div>
-        <div className="mi-resume-area mi-section mi-padding-top mi-padding-bottom">
+          <div className="mi-resume-area mi-section mi-padding-top mi-padding-bottom">
           <div className="container">
             <Sectiontitle title="Resume" />
             <Smalltitle title="Working Experience" icon="briefcase" />
@@ -61,7 +55,7 @@ function Resumes() {
               ))}
             </div>
           </div>
-        </div>
+          </div>
         </>
       )}
     </Layout>

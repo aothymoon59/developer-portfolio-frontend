@@ -16,6 +16,8 @@ function Header() {
   const information = {
     brandImage: siteSettings.logoUrl,
     name: siteSettings.fullName,
+    footerCopyright: siteSettings.footerCopyright,
+    siteTitle: siteSettings.siteTitle,
   };
 
   return (
@@ -77,16 +79,8 @@ function Header() {
           </li>
         </ul>
         <p className="mi-header-copyright">
-          &copy; {new Date().getFullYear()}{" "}
-          <b>
-            <a
-              rel="noopener noreferrer"
-              target="_blank"
-              href="https://nuclearthemes.com"
-            >
-              NuclearThemes
-            </a>
-          </b>
+          {information.footerCopyright ||
+            `© ${new Date().getFullYear()} ${information.siteTitle || "Developer Portfolio"}`}
         </p>
       </div>
     </nav>

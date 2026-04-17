@@ -1,8 +1,8 @@
 import React from "react";
-import { Helmet } from "react-helmet";
 import Layout from "../components/Layout";
 import { HomeSkeleton } from "../components/PageSkeleton";
 import Particle from "../components/Particle";
+import SiteHelmet from "../components/SiteHelmet";
 import Socialicons from "../components/Socialicons";
 import useSiteSettings from "../hooks/useSiteSettings";
 
@@ -11,13 +11,10 @@ function Home({ lightMode }) {
 
   return (
     <Layout>
-      <Helmet>
-        <title>Home - Chester React Personal Portfolio Template</title>
-        <meta
-          name="description"
-          content="Chester React Personal Portfolio Template Homepage"
-        />
-      </Helmet>
+      <SiteHelmet
+        pageTitle="Home"
+        description="Developer portfolio homepage"
+      />
       {loading ? (
         <HomeSkeleton />
       ) : (

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Helmet } from "react-helmet";
 import Layout from "../components/Layout";
 import { GridPageSkeleton } from "../components/PageSkeleton";
 import Pagination from "../components/Pagination";
 import PortfoliosView from "../components/PortfoliosView";
 import Sectiontitle from "../components/Sectiontitle";
+import SiteHelmet from "../components/SiteHelmet";
 import { useProjectsQuery } from "../hooks/usePortfolioQueries";
 
 function Portfolios({ lightMode }) {
@@ -30,13 +30,7 @@ function Portfolios({ lightMode }) {
 
   return (
     <Layout>
-      <Helmet>
-        <title>Projects - Chester React Personal Portfolio Template</title>
-        <meta
-          name="description"
-          content="Chester React Personal Portfolio Template Projects Page"
-        />
-      </Helmet>
+      <SiteHelmet pageTitle="Projects" description="Portfolio projects" />
       {isLoading ? (
         <GridPageSkeleton columns={3} />
       ) : (

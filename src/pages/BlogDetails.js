@@ -1,10 +1,10 @@
 import Disqus from "disqus-react";
 import React, { Suspense } from "react";
-import { Helmet } from "react-helmet";
 import { useParams } from "react-router-dom";
 import { Tag } from "antd";
 import Layout from "../components/Layout";
 import { BlogDetailsSkeleton } from "../components/PageSkeleton";
+import SiteHelmet from "../components/SiteHelmet";
 import Spinner from "../components/Spinner";
 import { useBlogDetailsQuery } from "../hooks/usePortfolioQueries";
 
@@ -45,7 +45,7 @@ function BlogDetails({ lightMode }) {
     });
   };
 
-  const disqusShortname = "chester-react";
+  const disqusShortname = "developer-portfolio-blogs";
   const disqusConfig = {
     url: `${window.location.origin}/blogs/${blogId}/${blog.slug}`,
     identifier: blogId,
@@ -54,15 +54,12 @@ function BlogDetails({ lightMode }) {
 
   return (
     <Layout>
-      <Helmet>
-        <title>{blog.title} - Chester React Personal Portfolio Template</title>
-        <meta
-          name="description"
-          content={
-            blog.excerpt ? blog.excerpt.replace(/<[^>]*>/g, "") : blog.title
-          }
-        />
-      </Helmet>
+      <SiteHelmet
+        pageTitle={blog.title}
+        description={
+          blog.excerpt ? blog.excerpt.replace(/<[^>]*>/g, "") : blog.title
+        }
+      />
       <Suspense fallback={<Spinner />}>
         <div className="mi-blog-details mi-section mi-padding-top mi-padding-bottom">
           <div className="container">

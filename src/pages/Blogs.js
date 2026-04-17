@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Helmet } from "react-helmet";
 import BlogsView from "../components/BlogsView";
 import Layout from "../components/Layout";
 import { GridPageSkeleton } from "../components/PageSkeleton";
 import Pagination from "../components/Pagination";
 import Sectiontitle from "../components/Sectiontitle";
+import SiteHelmet from "../components/SiteHelmet";
 import { useBlogsQuery } from "../hooks/usePortfolioQueries";
 
 function Blogs({ lightMode }) {
@@ -27,13 +27,7 @@ function Blogs({ lightMode }) {
 
   return (
     <Layout>
-      <Helmet>
-        <title>Blogs - Chester React Personal Portfolio Template</title>
-        <meta
-          name="description"
-          content="Chester React Personal Portfolio Template Blogs Page"
-        />
-      </Helmet>
+      <SiteHelmet pageTitle="Blogs" description="Blog posts and articles" />
       {isLoading ? (
         <GridPageSkeleton columns={2} />
       ) : (

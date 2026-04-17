@@ -8,7 +8,6 @@ import {
 import {
   Button,
   Card,
-  DatePicker,
   Form,
   Input,
   Modal,
@@ -20,7 +19,6 @@ import {
   Tag,
   message,
 } from "antd";
-import dayjs from "dayjs";
 import AdminPageHeader from "./components/AdminPageHeader";
 import AdminImageUpload from "./components/AdminImageUpload";
 import RichTextField from "./components/RichTextField";
@@ -77,7 +75,6 @@ function AdminBlogs() {
       record
         ? {
             ...record,
-            publishedAt: record.publishedAt ? dayjs(record.publishedAt) : null,
           }
         : {
             title: "",
@@ -87,7 +84,6 @@ function AdminBlogs() {
             coverImage: "",
             tags: [],
             published: false,
-            publishedAt: null,
           },
     );
   };
@@ -118,14 +114,9 @@ function AdminBlogs() {
   };
 
   const handleSubmit = async (values) => {
-    const payload = {
-      ...values,
-      publishedAt: values.publishedAt ? values.publishedAt.toISOString() : null,
-    };
-
     setSubmitting(true);
     try {
-      const formData = buildMultipartFormData(payload, {
+      const formData = buildMultipartFormData(values, {
         fileFields: {
           coverImage: "coverImageFile",
         },
@@ -279,9 +270,6 @@ function AdminBlogs() {
                 }))}
                 placeholder="Add tags"
               />
-            </Form.Item>
-            <Form.Item label="Published At" name="publishedAt">
-              <DatePicker showTime style={{ width: "100%" }} />
             </Form.Item>
             <Form.Item
               label="Published"

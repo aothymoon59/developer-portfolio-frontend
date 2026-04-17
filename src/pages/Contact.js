@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import * as Icon from "react-feather";
-import { Helmet } from "react-helmet";
 import { message } from "antd";
 import Layout from "../components/Layout";
 import { ContactSkeleton } from "../components/PageSkeleton";
 import Sectiontitle from "../components/Sectiontitle";
+import SiteHelmet from "../components/SiteHelmet";
 import api from "../utils/api";
 import useSiteSettings from "../hooks/useSiteSettings";
 
@@ -62,13 +62,7 @@ function Contact() {
 
   return (
     <Layout>
-      <Helmet>
-        <title>Contact - Chester React Personal Portfolio Template</title>
-        <meta
-          name="description"
-          content="Chester React Personal Portfolio Template Contact Page"
-        />
-      </Helmet>
+      <SiteHelmet pageTitle="Contact" description="Contact page" />
       {loading ? (
         <ContactSkeleton />
       ) : (
