@@ -7,6 +7,7 @@ import {
   Form,
   Input,
   Modal,
+  Popover,
   Space,
   Table,
   Tag,
@@ -165,13 +166,22 @@ function AdminMessages() {
                   >
                     View
                   </Button>
-                  <Button
-                    type="primary"
-                    icon={<SendOutlined />}
-                    onClick={() => openReplyModal(record)}
+                  <Popover
+                    content={
+                      record.status === "REPLIED"
+                        ? "This message has already been replied to."
+                        : "Send a reply to this message."
+                    }
                   >
-                    Reply
-                  </Button>
+                    <Button
+                      type="primary"
+                      icon={<SendOutlined />}
+                      onClick={() => openReplyModal(record)}
+                      disabled={record.status === "REPLIED"}
+                    >
+                      Reply
+                    </Button>
+                  </Popover>
                 </Space>
               ),
             },
@@ -244,7 +254,9 @@ function AdminMessages() {
             <Form.Item
               label="Reply Message"
               name="message"
-              rules={[{ required: true, message: "Reply message is required." }]}
+              rules={[
+                { required: true, message: "Reply message is required." },
+              ]}
             >
               <Input.TextArea rows={8} />
             </Form.Item>
