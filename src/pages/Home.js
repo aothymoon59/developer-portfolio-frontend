@@ -5,16 +5,14 @@ import Particle from "../components/Particle";
 import SiteHelmet from "../components/SiteHelmet";
 import Socialicons from "../components/Socialicons";
 import useSiteSettings from "../hooks/useSiteSettings";
+import { Link } from "react-router-dom";
 
 function Home({ lightMode }) {
   const { siteSettings, loading } = useSiteSettings();
 
   return (
     <Layout>
-      <SiteHelmet
-        pageTitle="Home"
-        description="Developer portfolio homepage"
-      />
+      <SiteHelmet pageTitle="Home" description="Developer portfolio homepage" />
       {loading ? (
         <HomeSkeleton />
       ) : (
@@ -37,6 +35,18 @@ function Home({ lightMode }) {
                     />
                   )}
                   <Socialicons bordered />
+                  <div className="mi-home-buttons">
+                    <Link to="/contact" className="mi-button">
+                      Contact Me
+                    </Link>
+                    <a
+                      href={siteSettings.cvUrl}
+                      target="_blank"
+                      className="mi-button"
+                    >
+                      View Resume
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>

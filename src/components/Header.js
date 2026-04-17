@@ -40,7 +40,6 @@ function Header() {
               <Image
                 src={information.brandImage}
                 placeholder="/images/about-image-placeholder.png"
-                alt="brandimage"
               />
             </Link>
           )}

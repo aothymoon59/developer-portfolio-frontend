@@ -2,8 +2,8 @@
  * Home Styles
  */
 
-.mi-home{
-  &-area{
+.mi-home {
+  &-area {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -12,7 +12,7 @@
     z-index: 1;
   }
 
-  &-particle{
+  &-particle {
     position: absolute;
     left: 0;
     top: 0;
@@ -21,63 +21,91 @@
     z-index: -1;
   }
 
-  &-content{
+  &-content {
     text-align: center;
     padding: 50px 80px;
 
-    h1{
+    h1 {
       font-weight: 700;
     }
 
-    p{
+    p {
       margin-top: 15px;
       font-size: 1.25rem;
       line-height: 2rem;
     }
 
-    .mi-socialicons{
+    .mi-socialicons {
       margin-top: 20px;
     }
+
+    .mi-home-buttons {
+      margin-top: 30px;
+      display: flex;
+      justify-content: center;
+
+      .mi-button {
+        margin: 0 10px;
+      }
+
+      .mi-button:first-child {
+        background: transparent;
+        border: 1px solid #037fff;
+        color: #fff;
+      }
+
+      // Responsive for small devices
+      @media (max-width: 576px) {
+        flex-direction: column;
+        align-items: stretch;
+
+        .mi-button {
+          margin: 8px 0;
+          width: 100%;
+          text-align: center;
+        }
+      }
+    }
   }
 
-  @media #{$layout-laptop}{
-    &-content{
+  @media #{$layout-laptop} {
+    &-content {
       padding: 50px 0px;
     }
   }
 
-  @media #{$layout-notebook}{
-    &-content{
+  @media #{$layout-notebook} {
+    &-content {
       padding: 50px 0px;
     }
   }
 
-  @media #{$layout-tablet}{
-    &-content{
+  @media #{$layout-tablet} {
+    &-content {
       padding: 50px 0px;
 
-      p{
+      p {
         font-size: 1.15rem;
         line-height: 1.75rem;
       }
     }
   }
 
-  @media #{$layout-mobile-lg}{
-    &-content{
+  @media #{$layout-mobile-lg} {
+    &-content {
       padding: 50px 0px;
 
-      p{
+      p {
         font-size: 1.08rem;
         line-height: 1.55rem;
       }
     }
   }
 
-  @media #{$layout-mobile-sm}{
-    &-content{
-      h1{
-        span{
+  @media #{$layout-mobile-sm} {
+    &-content {
+      h1 {
+        span {
           display: block;
         }
       }
